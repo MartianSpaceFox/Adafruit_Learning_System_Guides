@@ -18,12 +18,10 @@ pixels = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1, bright
 # this function takes a standard "hex code" for a color and returns
 # a tuple of (red, green, blue)
 def hex2rgb(hex_code):
-    red = int("0x"+hex_code[0:2], 16)
-    green = int("0x"+hex_code[2:4], 16)
-    blue = int("0x"+hex_code[4:6], 16)
-    rgb = (red, green, blue)
-    # print(rgb)
-    return rgb
+    red = int(f"0x{hex_code[:2]}", 16)
+    green = int(f"0x{hex_code[2:4]}", 16)
+    blue = int(f"0x{hex_code[4:6]}", 16)
+    return red, green, blue
 
 # This array contains digitized data for a heartbeat wave scaled to between 0 and 1.0
 # It is used to create the "beat" mode. Ensure each line is <78 characters for Travis-CI
@@ -134,37 +132,32 @@ while True:
             targetColor =(50, 50, 50)
             if mode == "wheel":
                 mode="solid"
-    else:
-        # If no text available, update the color according to the mode
-        if mode == 'blink':
-            if curColor == black:
-                curColor = targetColor
-            else:
-                curColor = black
-            sleep(.4)
-            # print('.', end='')
-            pixels.fill(curColor)
-            pixels.show()
-        elif mode == 'wheel':
-            sleep(.05)
-            pos = (pos + 1) % 255
-            pixels.fill(wheel(pos))
-            pixels.show()
-        elif mode == 'solid':
-            pixels.fill(targetColor)
-            pixels.show()
-        elif mode == 'beat':
-            pos = (pos + 5 ) % 106
-            scaleAvg = (beatArray[(pos-2)%106] + beatArray[(pos-1)%106] + beatArray[pos] +
-                        beatArray[(pos+1)%106] + beatArray[(pos+2)%106])/5
-            beatColor = tuple(int(scaleAvg*x) for x in targetColor)
-            pixels.fill(beatColor)
-            sleep(.025)
-            pixels.show()
-        elif mode == 'ramp':
-            pos = ((pos + 5 ) % 255)
-            scaleFactor = (2*abs(pos-127))/255
-            beatColor = tuple(int(scaleFactor * x) for x in targetColor)
-            pixels.fill(beatColor)
-            sleep(.075)
-            pixels.show()
+    elif mode == 'beat':
+        pos = (pos + 5 ) % 106
+        scaleAvg = (beatArray[(pos-2)%106] + beatArray[(pos-1)%106] + beatArray[pos] +
+                    beatArray[(pos+1)%106] + beatArray[(pos+2)%106])/5
+        beatColor = tuple(int(scaleAvg*x) for x in targetColor)
+        pixels.fill(beatColor)
+        sleep(.025)
+        pixels.show()
+    elif mode == 'blink':
+        curColor = targetColor if curColor == black else black
+        sleep(.4)
+        # print('.', end='')
+        pixels.fill(curColor)
+        pixels.show()
+    elif mode == 'ramp':
+        pos = ((pos + 5 ) % 255)
+        scaleFactor = (2*abs(pos-127))/255
+        beatColor = tuple(int(scaleFactor * x) for x in targetColor)
+        pixels.fill(beatColor)
+        sleep(.075)
+        pixels.show()
+    elif mode == 'solid':
+        pixels.fill(targetColor)
+        pixels.show()
+    elif mode == 'wheel':
+        sleep(.05)
+        pos = (pos + 1) % 255
+        pixels.fill(wheel(pos))
+        pixels.show()

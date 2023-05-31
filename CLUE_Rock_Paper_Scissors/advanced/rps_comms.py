@@ -119,13 +119,9 @@ def startScan(radio, send_ad, send_advertising,
                                    timeout=scan_time):
         addr_text = addrToText(adv_ss.address.address_bytes)
 
-        # Add name of the device to dict limiting
-        # this to devices of interest by checking received_ads_by_addr
-        # plus pass data to any callback function
         if (addr_text not in blenames_by_addr
                 and addr_text in received_ads_by_addr):
-            name = adv_ss.complete_name  # None indicates no value
-            if name:  # This test ignores any empty strings too
+            if name := adv_ss.complete_name:
                 blenames_by_addr[addr_text] = name
                 if name_cb is not None:
                     name_cb(name, addr_text, adv_ss.address, adv_ss)
@@ -151,18 +147,18 @@ def startScan(radio, send_ad, send_advertising,
                     d_print(4, "RXed mm RTA", addr_text, adv)
                     break
 
-        else:
-            if any(isinstance(adv_ss, cls) for cls in rx_ad_classes):
-                adv = adv_ss
+        elif any(isinstance(adv_ss, cls) for cls in rx_ad_classes):
+            adv = adv_ss
 
         # Continue loop after an endscan callback if ad is not of interest
         if adv is None:  # this means adv was not in rx_ad_classes
-            if endscan_cb is not None and endscan_cb(addr_text, adv_ss.address, adv_ss):
-                complete = True
-                break
-            else:
+            if endscan_cb is None or not endscan_cb(
+                addr_text, adv_ss.address, adv_ss
+            ):
                 continue
 
+            complete = True
+            break
         # Must be a match if this is reached
         matching_ads += 1
         if ad_cb is not None:
@@ -269,11 +265,7 @@ def broadcastAndReceive(radio,
     # as text string
     cls_send_ad = type(send_ad)
     received_ads_by_addr = dict(ads_by_addr)  # Will not be a deep copy
-    if receive_ads_types:
-        rx_ad_classes = receive_ads_types
-    else:
-        rx_ad_classes = (cls_send_ad,)
-
+    rx_ad_classes = receive_ads_types if receive_ads_types else (cls_send_ad, )
     if match_locally:
         ss_rx_ad_classes = (Advertisement,)
     elif scan_response_request:
@@ -291,12 +283,11 @@ def broadcastAndReceive(radio,
         if cls_send_ad in [type(andb[0]) for andb in adsnb_per_addr]:
             send_ad_rxs[addr_text] = True
 
-        # Pick out any Advertisements with an ack field with a value
-        acks_thisaddr = [adnb for adnb in adsnb_per_addr
-                         if hasattr(adnb[0], "ack")
-                         and isinstance(adnb[0].ack, int)]
-
-        if acks_thisaddr:
+        if acks_thisaddr := [
+            adnb
+            for adnb in adsnb_per_addr
+            if hasattr(adnb[0], "ack") and isinstance(adnb[0].ack, int)
+        ]:
             seqs = [adnb[0].ack for adnb in acks_thisaddr]
             acks[addr_text] = seqs
             d_print(5, "Acks received for", addr_text,

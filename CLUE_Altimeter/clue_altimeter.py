@@ -30,7 +30,7 @@ clue._pressure.iir_filter = 0x02  # 4
 clue._pressure.standby_period = 0x01  # 62.5 ms
 
 # restore saved sea level pressure from NVM
-slp = struct.unpack("f", nvm[0:4])[0]
+slp = struct.unpack("f", nvm[:4])[0]
 clue.sea_level_pressure = slp if 0 < slp < 2000 else STD_SLP
 
 # --------------------------------------------------------------------
@@ -123,12 +123,10 @@ def recalibrate(current_sea_level_pressure=None):
         if clue.button_a and not clue.button_b:
             altitude -= 1
             time.sleep(DEBOUNCE)
-        # decrease
         elif clue.button_b and not clue.button_a:
             altitude += 1
             time.sleep(DEBOUNCE)
-        # hold both to set
-        elif clue.button_a and clue.button_b:
+        elif clue.button_a:
             while clue.button_a and clue.button_b:
                 if time.monotonic() - now > HOLD_TO_SET:
                     print("done")
@@ -144,7 +142,7 @@ def recalibrate(current_sea_level_pressure=None):
     # compute sea level pressure and set
     clue.sea_level_pressure = compute_sea_level_pressure(barometric_pressure, altitude)
     # store in NVM for later use
-    nvm[0:4] = struct.pack("f", clue.sea_level_pressure)
+    nvm[:4] = struct.pack("f", clue.sea_level_pressure)
 
 
 def update_display():

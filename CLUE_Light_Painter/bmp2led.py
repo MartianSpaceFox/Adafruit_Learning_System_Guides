@@ -77,10 +77,10 @@ class BMP2LED:
         Returns:
             Converted integer product.
         """
-        result = 0
-        for byte_index, byte in enumerate(self.bmp_file.read(num_bytes)):
-            result += byte << (byte_index * 8)
-        return result
+        return sum(
+            byte << (byte_index * 8)
+            for byte_index, byte in enumerate(self.bmp_file.read(num_bytes))
+        )
 
 
     def read_header(self):
@@ -132,7 +132,7 @@ class BMP2LED:
         valid_list = []
         for entry in full_list:
             try:
-                with open(path + '/' + entry, 'rb') as self.bmp_file:
+                with open(f'{path}/{entry}', 'rb') as self.bmp_file:
                     self.read_header()
                     valid_list.append(entry)
             except (OSError, BMPError):
@@ -349,8 +349,9 @@ class BMP2LED:
                         # Reorder data from BGR to DotStar color order,
                         # allowing for header and start-of-pixel markers
                         # in the DotStar data.
-                        dotstar_buffer[5 + self.blue_index:
-                                       5 + 4 * clipped_width:4] = got[0::3]
+                        dotstar_buffer[
+                            5 + self.blue_index : 5 + 4 * clipped_width : 4
+                        ] = got[::3]
                         dotstar_buffer[5 + self.green_index:
                                        5 + 4 * clipped_width:4] = got[1::3]
                         dotstar_buffer[5 + self.red_index:
@@ -394,4 +395,4 @@ class BMP2LED:
             else:
                 raise OSError("OS Error 0.5")
         except BMPError as err:
-            print("Failed to parse BMP: " + err.args[0])
+            print(f"Failed to parse BMP: {err.args[0]}")

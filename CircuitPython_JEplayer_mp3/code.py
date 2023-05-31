@@ -169,13 +169,9 @@ class PlaybackDisplay:
             self.iconbar.deactivate(ICON_FOLDERNEXT)
             return (-1,)
         elif selected == ICON_PREV:
-            if self.shuffle:
-                return (None,)
-            return (idx-1,)
+            return (None, ) if self.shuffle else (idx-1, )
         elif selected == ICON_NEXT:
-            if self.shuffle:
-                return (None,)
-            return (idx+1,)
+            return (None, ) if self.shuffle else (idx+1, )
         elif selected == ICON_SHUFFLE:
             self.iconbar.toggle(selected)
             if self.iconbar.active[ICON_SHUFFLE]:
@@ -322,11 +318,17 @@ def menu_choice(seq, button_ok, button_cancel=0, *, sel_idx=0, text_font=font):
     palette = displayio.Palette(2)
     palette[0] = 0
     palette[1] = 0xffffff
-    labels = [displayio.TileGrid(text_font.bitmap, pixel_shader=palette,
-                                 width=max_glyphs+1, height=1,
-                                 tile_width=glyph_width,
-                                 tile_height=glyph_height)
-              for i in range(num_rows)]
+    labels = [
+        displayio.TileGrid(
+            text_font.bitmap,
+            pixel_shader=palette,
+            width=max_glyphs + 1,
+            height=1,
+            tile_width=glyph_width,
+            tile_height=glyph_height,
+        )
+        for _ in range(num_rows)
+    ]
     terminals = [terminalio.Terminal(li, text_font) for li in labels]
     cursor = adafruit_display_text.label.Label(text_font, max_glyphs=1, color=0xddddff)
     base_y = 0
@@ -451,11 +453,10 @@ def play_one_file(idx, filename, folder, title, playlist_size):
 
     if result is None:
         if playback_display.shuffle:
-            if playback_display.shuffle:
-                #  Choose a random integer .. except for this one
-                result = random.randrange(playlist_size-1)
-                if result >= idx:
-                    result += 1
+            #  Choose a random integer .. except for this one
+            result = random.randrange(playlist_size-1)
+            if result >= idx:
+                result += 1
         else:
             result = (idx + 1)
     speaker.stop()

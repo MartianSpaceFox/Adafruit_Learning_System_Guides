@@ -1,16 +1,17 @@
 """
 GFX Helper for pyportal_azure_iot_temperature.py
 """
+
 import board
 import displayio
 from adafruit_display_text.label import Label
 from adafruit_bitmap_font import bitmap_font
 
-cwd = ("/"+__file__).rsplit('/', 1)[0] # the current working directory (where this file is)
+cwd = f"/{__file__}".rsplit('/', 1)[0]
 
 # Fonts within /fonts folder
-info_font = cwd+"/fonts/Nunito-Black-17.bdf"
-temperature_font = cwd+"/fonts/Nunito-Light-75.bdf"
+info_font = f"{cwd}/fonts/Nunito-Black-17.bdf"
+temperature_font = f"{cwd}/fonts/Nunito-Light-75.bdf"
 
 class Azure_GFX(displayio.Group):
     def __init__(self, celsius=False):
@@ -35,7 +36,7 @@ class Azure_GFX(displayio.Group):
         self._icon_sprite = None
         self._icon_file = None
         self._cwd = cwd
-        self.set_icon(self._cwd+"/images/azure_splash.bmp")
+        self.set_icon(f"{self._cwd}/images/azure_splash.bmp")
 
         print('Loading Fonts...')
         glyphs = b'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-,.:/ '

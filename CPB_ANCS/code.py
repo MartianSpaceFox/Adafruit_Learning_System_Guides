@@ -74,11 +74,9 @@ class Dimmer:
         if a.value or b.value:
             self._update_time = time.monotonic()
         if time.monotonic() - self._update_time > self._timeout:
-            if display.brightness > self._level:
-                display.brightness = self._level
-        else:
-            if display.brightness == self._level:
-                display.brightness = 1.0
+            display.brightness = min(display.brightness, self._level)
+        elif display.brightness == self._level:
+            display.brightness = 1.0
 
 dimmer = Dimmer()
 

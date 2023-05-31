@@ -60,10 +60,7 @@ class RichButton:
         if new_state != self._prior_state:
             # Button state changed since last call
             self._prior_state = new_state
-            if not new_state:
-                # Button initially pressed (TAP not returned until debounce)
-                self._press_time = monotonic()
-            else:
+            if new_state:
                 # Button initially released
                 if self._holding:
                     # Button released after hold
@@ -77,18 +74,19 @@ class RichButton:
                         return self.DOUBLE_TAP
                     # Else regular debounced release, maybe 1st tap, keep time
                     self._tap_time = monotonic()
-        else:
-            # Button is in same state as last call
-            if self._prior_state:
-                # Is not pressed
-                if (self._tap_time > 0 and
-                        (monotonic() - self._tap_time) > self._double_tap_period):
-                    # Enough time since last tap that it's not a double
-                    self._tap_time = 0
-                    return self.TAP
-            elif (not self._holding and
-                  (monotonic() - self._press_time) >= self._hold_period):
-                # Is pressed, and has been for the holding period
-                self._holding = True
-                return self.HOLD
+            else:
+                # Button initially pressed (TAP not returned until debounce)
+                self._press_time = monotonic()
+        elif self._prior_state:
+            # Is not pressed
+            if (self._tap_time > 0 and
+                    (monotonic() - self._tap_time) > self._double_tap_period):
+                # Enough time since last tap that it's not a double
+                self._tap_time = 0
+                return self.TAP
+        elif (not self._holding and
+              (monotonic() - self._press_time) >= self._hold_period):
+            # Is pressed, and has been for the holding period
+            self._holding = True
+            return self.HOLD
         return None

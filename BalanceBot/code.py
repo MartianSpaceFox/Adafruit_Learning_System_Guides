@@ -145,9 +145,9 @@ while True:
             uart.write("command too long.. ignored\r\n")
         else:
             uart.write(ch)
-            if ch == 13:                  # \r
+            if ch == 13:      # \r
                 if cmd_buffer_index > 0:
-                    Kp, Ki, Kd = process_command(cmd_buffer[0:cmd_buffer_index], Kp, Ki, Kd)
+                    Kp, Ki, Kd = process_command(cmd_buffer[:cmd_buffer_index], Kp, Ki, Kd)
                 cmd_buffer_index = 0
             else:
                 cmd_buffer[cmd_buffer_index] = ch[0]

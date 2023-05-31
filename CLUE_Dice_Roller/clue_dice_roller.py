@@ -56,7 +56,7 @@ board.DISPLAY.show(group)
 def roll(count, sides):
     select_label.text = ''
     for i in range(15):
-        roll_value = sum([randint(1, sides) for _ in range(count + 1)])
+        roll_value = sum(randint(1, sides) for _ in range(count + 1))
         roll_label.text = str(roll_value)
         roll_label.x = 120 - (roll_label.bounding_box[2] // 2)
         duration = (i * 0.05) / 2
@@ -90,9 +90,8 @@ while True:
                 number_of_dice = 0
                 update_display(number_of_dice, side_selection)
             roll(number_of_dice, SIDES[side_selection])
-    else:
-        if button_a.rose or button_b.rose:   # back to dice selection
-            mode = SELECTING
-            update_display(number_of_dice, side_selection)
-        elif clue.shake(shake_threshold=25):   # reroll
-            roll(number_of_dice, SIDES[side_selection])
+    elif button_a.rose or button_b.rose:   # back to dice selection
+        mode = SELECTING
+        update_display(number_of_dice, side_selection)
+    elif clue.shake(shake_threshold=25):   # reroll
+        roll(number_of_dice, SIDES[side_selection])

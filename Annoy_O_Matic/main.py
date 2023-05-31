@@ -95,29 +95,8 @@ def annoy_ringtone(ringtone, tempo, interval):
     G3 = 196
     Gs3 = 208
     Ab3 = 208
-    A3 = 220
     As3 = 233
     Bb3 = 233
-    B3 = 247
-
-    # C4 = 262
-    Cs4 = 277
-    # Db4 = 277
-    D4 = 294
-    # Ds4 = 311
-    # Eb4 = 311
-    E4 = 330
-    # F4 = 349
-    Fs4 = 370
-    # Gb4 = 370
-    G4 = 392
-    # Gs4 = 415
-    # Ab4 = 415
-    # A4 = 440
-    # As4 = 466
-    # Bb4 = 466
-    B4 = 494
-
     C5 = 523
     Cs5 = 554
     Db5 = 554
@@ -165,14 +144,23 @@ def annoy_ringtone(ringtone, tempo, interval):
                           [Cs5, quarter_note], [E5, quarter_note],
                           [A5, whole_note]]
 
-        for n in range(len(nokia_ringtone)):
-            piezo.frequency = (nokia_ringtone[n][0])
+        for item in nokia_ringtone:
+            piezo.frequency = item[0]
             piezo.duty_cycle = 65536 // 2  # on 50%
-            time.sleep(nokia_ringtone[n][1])  # note duration
+            time.sleep(item[1])
             piezo.duty_cycle = 0  # off
             time.sleep(0.01)
 
     if ringtone == 2:
+        # Gb4 = 370
+        G4 = 392
+        # Gs4 = 415
+        # Ab4 = 415
+        # A4 = 440
+        # As4 = 466
+        # Bb4 = 466
+        B4 = 494
+
         # iPhone Marimba
         iPhone_ringtone = [[B4, eighth_note], [G4, eighth_note],
                            [D5, eighth_note], [G4, eighth_note],
@@ -181,14 +169,26 @@ def annoy_ringtone(ringtone, tempo, interval):
                            [E5, eighth_note], [D5, eighth_note],
                            [G4, eighth_note], [D5, eighth_note]]
 
-        for n in range(len(iPhone_ringtone)):
-            piezo.frequency = (iPhone_ringtone[n][0])
+        for item_ in iPhone_ringtone:
+            piezo.frequency = item_[0]
             piezo.duty_cycle = 65536 // 2  # on 50%
-            time.sleep(iPhone_ringtone[n][1])  # note duration
+            time.sleep(item_[1])
             piezo.duty_cycle = 0  # off
             time.sleep(0.01)
 
     if ringtone == 3:
+        A3 = 220
+        B3 = 247
+
+        # C4 = 262
+        Cs4 = 277
+        # Db4 = 277
+        D4 = 294
+        # Ds4 = 311
+        # Eb4 = 311
+        E4 = 330
+        # F4 = 349
+        Fs4 = 370
         # Rickroll
         rick_ringtone = [[A3, sixteenth_note], [B3, sixteenth_note],
                          [D4, sixteenth_note], [B3, sixteenth_note],
@@ -202,10 +202,10 @@ def annoy_ringtone(ringtone, tempo, interval):
                          [D4, sixteenth_note], [Cs4, sixteenth_note],
                          [B3, eighth_note]]
 
-        for n in range(len(rick_ringtone)):
-            piezo.frequency = (rick_ringtone[n][0])
+        for item__ in rick_ringtone:
+            piezo.frequency = item__[0]
             piezo.duty_cycle = 65536 // 2  # on 50%
-            time.sleep(rick_ringtone[n][1])  # note duration
+            time.sleep(item__[1])
             piezo.duty_cycle = 0  # off
             time.sleep(0.035)
 

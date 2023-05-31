@@ -9,7 +9,7 @@ from adafruit_clue import clue
 
 blink_light = True  # optional flashing backlight on accent
 tempo = 120  # in bpm
-print("BPM: {}".format(tempo))
+print(f"BPM: {tempo}")
 time_signature = 4  # Beats per measure
 BEEP_DURATION = 0.05
 delay = 60 / tempo
@@ -48,7 +48,7 @@ screen.append(title_label)
 
 # interval text
 interval_label = label.Label(
-    terminalio.FONT, text=("{} BPM".format(tempo)), scale=5, color=WHITE, max_glyphs=7
+    terminalio.FONT, text=f"{tempo} BPM", scale=5, color=WHITE, max_glyphs=7
 )
 interval_label.x = 20
 interval_label.y = 95
@@ -65,7 +65,7 @@ screen.append(vert_line)
 # Signature text
 sig_label = label.Label(
     terminalio.FONT,
-    text=("{}/4".format(time_signature)),
+    text=f"{time_signature}/4",
     scale=3,
     color=BLACK,
     max_glyphs=3,
@@ -124,10 +124,7 @@ while True:
 
     # play/pause
     if clue.button_b:
-        if play_label.text == " play":
-            play_label.text = "pause"
-        else:
-            play_label.text = " play"
+        play_label.text = "pause" if play_label.text == " play" else " play"
         running = not running
         time.sleep(0.4)
         beat = 1  # start with downbeat
@@ -135,11 +132,8 @@ while True:
     # Time Signature change
     if clue.button_a:
         print("sig change")
-        if time_signature == 4:
-            time_signature = 3
-        else:
-            time_signature = 4
-        sig_label.text = "{}/4".format(time_signature)
+        time_signature = 3 if time_signature == 4 else 4
+        sig_label.text = f"{time_signature}/4"
         time.sleep(0.4)
         beat = 1  # start with downbeat
 
@@ -164,12 +158,12 @@ while True:
         if tempo > 40:
             tempo = tempo - tempo_increment
             delay = 60 / tempo
-            interval_label.text = "{} BPM".format(tempo)
+            interval_label.text = f"{tempo} BPM"
             time.sleep(0.2)  # debounce
 
-    if clue.touch_2:
-        if tempo < 330:
+    if tempo < 330:
+        if clue.touch_2:
             tempo = tempo + tempo_increment
             delay = 60 / tempo
-            interval_label.text = "{} BPM".format(tempo)
+            interval_label.text = f"{tempo} BPM"
             time.sleep(0.2)  # debounce

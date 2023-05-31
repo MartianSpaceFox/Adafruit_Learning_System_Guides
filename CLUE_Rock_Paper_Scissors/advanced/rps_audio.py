@@ -50,7 +50,7 @@ class SampleJukebox():
         fhs = {}
         for file in files:
             wav_file = None
-            filename = directory + "/" + file + ".wav"
+            filename = f"{directory}/{file}.wav"
             try:
                 wav_file = open(filename, "rb")
                 fhs[file] = WaveFile(wav_file, self._file_buf)

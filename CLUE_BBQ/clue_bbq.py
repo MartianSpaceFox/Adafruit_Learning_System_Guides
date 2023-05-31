@@ -127,16 +127,15 @@ while True:
                     probe_count = len(temps)  # check how many probes there are
                     for i in range(probe_count):
                         if temps[i] != 0 and temps[i] < 1000:  # unplugged probes
+                            clue.pixel.fill((50, 0, 0))
                             if unit_mode:
-                                clue.pixel.fill((50, 0, 0))
                                 temp = temps[i]
-                                my_labels[i].text = "{} C".format(temp)
+                                my_labels[i].text = f"{temp} C"
                                 clue.pixel.fill((0, 0, 0))
                                 print("Probe", i + 1, "Temperature:", temp, "C")
                             else:  # F
-                                clue.pixel.fill((50, 0, 0))
                                 temp = temps[i] * 9 / 5 + 32
-                                my_labels[i].text = "{} F".format(temp)
+                                my_labels[i].text = f"{temp} F"
                                 clue.pixel.fill((0, 0, 0))
                                 print("Probe", i + 1, "Temperature:", temp, "F")
                         else:

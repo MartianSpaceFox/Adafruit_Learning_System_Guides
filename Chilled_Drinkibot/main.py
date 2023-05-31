@@ -26,18 +26,14 @@ while True:
     # we could also just do "led.value = not button.value" !
     if button.value:
         print('not')
-        led.value = False  # turn OFF LED
-        chiller.value = False  # turn OFF chiller
-        pump.value = False  # turn OFF pump
     else:
         print('pressed')
         led.value = True  # turn ON LED
         chiller.value = True  # turn ON chiller
         time.sleep(chillTime * 60)  # wait chiller time (in seconds)
-        chiller.value = False  # turn OFF chiller
         pump.value = True  # turn ON pump
         time.sleep(pumpTime)  # wait pump time
-        pump.value = False  # turn OFF pump
-        led.value = False  # turn OFF LED
-
+    pump.value = False  # turn OFF pump
+    chiller.value = False  # turn OFF chiller
+    led.value = False  # turn OFF LED
     time.sleep(0.01)  # debounce delay

@@ -61,7 +61,7 @@ def generateOTPadKey(n_bytes):
     try:
         key = os.urandom(n_bytes)
     except NotImplementedError:
-        key = bytes([random.getrandbits(8) for _ in range(n_bytes)])
+        key = bytes(random.getrandbits(8) for _ in range(n_bytes))
     return key
 
 
@@ -73,7 +73,7 @@ def encrypt(plain_text, key, algorithm, *, nonce=None, counter=None):
     key_data = key(len(plain_text)) if callable(key) else key
 
     if algorithm == "xor":
-        return bytes([plain_text[i] ^ key_data[i] for i in range(len(plain_text))])
+        return bytes(plain_text[i] ^ key_data[i] for i in range(len(plain_text)))
     elif algorithm == "chacha20":
         c_counter = 0 if counter is None else counter
         algo = ChaCha(key, nonce, counter=c_counter)

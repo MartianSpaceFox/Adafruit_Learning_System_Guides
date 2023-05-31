@@ -64,7 +64,7 @@ while True:
 
     if max_slope < slope_g:
         max_slope = slope_g
-        print(slope_g)
+        print(max_slope)
         text_area.text = "Max Slope %0.1fg" % (max_slope)
         if max_slope >= 9 and egg_ok:
             gegg_sprite.x = 300

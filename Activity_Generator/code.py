@@ -42,9 +42,5 @@ while True:
     screen[1].text = activity
     screen[3].text = subject_a
 
-    if two_subjects:
-        screen[4].text = subject_b
-    else:
-        screen[4].text = ""
-
+    screen[4].text = subject_b if two_subjects else ""
     screen.show()

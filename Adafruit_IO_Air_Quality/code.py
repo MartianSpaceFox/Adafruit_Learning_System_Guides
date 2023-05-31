@@ -100,7 +100,6 @@ def sample_aq_sensor():
     over a 2.3 second sample rate.
 
     """
-    aq_reading = 0
     aq_samples = []
 
     # initial timestamp
@@ -115,9 +114,7 @@ def sample_aq_sensor():
             continue
         # pm sensor output rate of 1s
         time.sleep(1)
-    # average sample reading / # samples
-    for sample in range(len(aq_samples)):
-        aq_reading += aq_samples[sample]
+    aq_reading = sum(aq_samples)
     aq_reading = aq_reading / len(aq_samples)
     aq_samples.clear()
     return aq_reading
@@ -180,7 +177,7 @@ while True:
         aqi_reading = sample_aq_sensor()
         aqi, aqi_category = calculate_aqi(aqi_reading)
         print("AQI: %d" % aqi)
-        print("Category: %s" % aqi_category)
+        print(f"Category: {aqi_category}")
 
         # temp and humidity
         print("Sampling environmental sensor...")

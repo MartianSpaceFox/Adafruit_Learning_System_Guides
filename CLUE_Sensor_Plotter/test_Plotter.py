@@ -75,10 +75,9 @@ class Test_Plotter(unittest.TestCase):
     def count_nz_rows(self, bitmap):
         nz_rows = []
         for y_pos in range(self._PLOT_HEIGHT):
-            count = 0
-            for x_pos in range(self._PLOT_WIDTH):
-                if bitmap[x_pos, y_pos] != 0:
-                    count += 1
+            count = sum(
+                1 for x_pos in range(self._PLOT_WIDTH) if bitmap[x_pos, y_pos] != 0
+            )
             if count > 0:
                 nz_rows.append(y_pos)
         return nz_rows
@@ -92,19 +91,19 @@ class Test_Plotter(unittest.TestCase):
     def make_a_Plotter(self, style, mode, scale_mode=None):
         mocked_display = Mock()
 
-        plotter = Plotter(mocked_display,
-                          style=style,
-                          mode=mode,
-                          scale_mode=scale_mode,
-                          scroll_px=self._SCROLL_PX,
-                          plot_width=self._PLOT_WIDTH,
-                          plot_height=self._PLOT_HEIGHT,
-                          title="Debugging",
-                          max_title_len=99,
-                          mu_output=False,
-                          debug=0)
-
-        return plotter
+        return Plotter(
+            mocked_display,
+            style=style,
+            mode=mode,
+            scale_mode=scale_mode,
+            scroll_px=self._SCROLL_PX,
+            plot_width=self._PLOT_WIDTH,
+            plot_height=self._PLOT_HEIGHT,
+            title="Debugging",
+            max_title_len=99,
+            mu_output=False,
+            debug=0,
+        )
 
     def ready_plot_source(self, plttr, source):
         #source_name = str(source)
@@ -316,15 +315,21 @@ class Test_Plotter(unittest.TestCase):
             plotter.data_add(all_data[-1])
 
         # all_data is now [(10, 15, 40), (11, 16, 41), (12, 17, 42)]
-        self.assertEqual(plotter._data_y_pos[0][0:3],
-                         array.array('i', [90, 89, 88]),
-                         "channel 0 plotted y positions")
-        self.assertEqual(plotter._data_y_pos[1][0:3],
-                         array.array('i', [85, 84, 83]),
-                         "channel 1 plotted y positions")
-        self.assertEqual(plotter._data_y_pos[2][0:3],
-                         array.array('i', [60, 59, 58]),
-                         "channel 2 plotted y positions")
+        self.assertEqual(
+            plotter._data_y_pos[0][:3],
+            array.array('i', [90, 89, 88]),
+            "channel 0 plotted y positions",
+        )
+        self.assertEqual(
+            plotter._data_y_pos[1][:3],
+            array.array('i', [85, 84, 83]),
+            "channel 1 plotted y positions",
+        )
+        self.assertEqual(
+            plotter._data_y_pos[2][:3],
+            array.array('i', [60, 59, 58]),
+            "channel 2 plotted y positions",
+        )
 
         # Fill rest of screen
         for d_idx in range(197):
@@ -375,15 +380,14 @@ class Test_Plotter(unittest.TestCase):
                 actual = plot[st_x_pos+idx, y_pos]
                 if actual == expected:
                     total_pixel_matches += 1
-                else:
-                    if verbose >= 4:
-                        print("Pixel value for channel",
-                              "{:d}, naive expectation {:d},".format(ch_idx,
-                                                                     expected),
-                              "actual {:d} at {:d}, {:d}, {:d}".format(idx,
-                                                                       actual,
-                                                                       st_x_pos + idx,
-                                                                       y_pos))
+                elif verbose >= 4:
+                    print("Pixel value for channel",
+                          "{:d}, naive expectation {:d},".format(ch_idx,
+                                                                 expected),
+                          "actual {:d} at {:d}, {:d}, {:d}".format(idx,
+                                                                   actual,
+                                                                   st_x_pos + idx,
+                                                                   y_pos))
         # Only 7 out of 9 will match because channel 2 put a vertical
         # line at x position 175 over-writing ch0 and ch1
         self.assertEqual(total_pixel_matches, 7, "plotted pixels check")

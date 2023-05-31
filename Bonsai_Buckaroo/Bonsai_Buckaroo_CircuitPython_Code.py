@@ -30,7 +30,7 @@ while True:
     # Calculate a percentage (analog_value ranges from 0 to 65535)
     percentage = analog_value / 65535 * 100
     # Display the percentage
-    clue_display[0].text = "Soil: {} %".format(int(percentage))
+    clue_display[0].text = f"Soil: {int(percentage)} %"
     # Print the values to the serial console
     print((analog_value, percentage))
 

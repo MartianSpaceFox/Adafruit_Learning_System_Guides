@@ -48,6 +48,6 @@ while True:
     if mode == 0:
         # The little red LED is off when pads 1-3 are "enabled".
         red_led.value = False
-    if mode == 1:
+    elif mode == 1:
         # The little red LED is on when pads 1-3 are "disabled".
         red_led.value = True

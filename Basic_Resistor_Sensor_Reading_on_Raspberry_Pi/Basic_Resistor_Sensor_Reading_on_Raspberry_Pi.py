@@ -21,6 +21,6 @@ while True:
         rc.direction = Direction.INPUT
 
         # This takes about 1 millisecond per loop cycle
-        while rc.value is False:
+        while not rc.value:
             reading += 1
         print(reading)

@@ -90,8 +90,7 @@ def setup():
 
     fade = 233 + n_leds / 2
 
-    if fade > 233:
-        fade = 233
+    fade = min(fade, 233)
 
 setup()
 
@@ -100,10 +99,10 @@ while True:
     h = w = i = r = g = b = 0
     x = 0
 
-    for h in range(n_horns):                # For each horn...
+    for h in range(n_horns):            # For each horn...
         x = 7
         sum_total = 0
-        for i in range(n_leds):             # For each LED along horn...
+        for i in range(n_leds):     # For each LED along horn...
             x += 16
             for w in range(n_waves):        # For each wave of horn...
                 if (x < wave[h][w][lower]) or (x > wave[h][w][upper]):
@@ -111,12 +110,10 @@ while True:
                 if x <= wave[h][w][mid]:    # Lower half of wave (ramping up peak brightness)
                     sum_top = wave[h][w][intensity] * (x - wave[h][w][lower])
                     sum_bottom = (wave[h][w][mid] - wave[h][w][lower])
-                    sum_total += sum_top /  sum_bottom
-                else:                       # Upper half of wave (ramping down from peak)
+                else:       # Upper half of wave (ramping down from peak)
                     sum_top = wave[h][w][intensity] * (wave[h][w][upper] - x)
                     sum_bottom = (wave[h][w][upper] - wave[h][w][mid])
-                    sum_total += sum_top / sum_bottom
-
+                sum_total += sum_top /  sum_bottom
             sum_total = int(sum_total)          # convert from decimal to whole number
 
             # Now the magnitude (sum_total) is remapped to color for the LEDs.

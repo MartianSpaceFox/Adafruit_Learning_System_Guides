@@ -128,8 +128,7 @@ def wheel(pos):
 
 def cycle_sequence(seq):
     while True:
-        for elem in seq:
-            yield elem
+        yield from seq
 
 def rainbow_lamp(seq):
     g = cycle_sequence(seq)
@@ -222,15 +221,15 @@ class StateMachine(object):
 
     def go_to_state(self, state_name):
         if self.state:
-            log('Exiting %s' % (self.state.name))
+            log(f'Exiting {self.state.name}')
             self.state.exit(self)
         self.state = self.states[state_name]
-        log('Entering %s' % (self.state.name))
+        log(f'Entering {self.state.name}')
         self.state.enter(self)
 
     def update(self):
         if self.state:
-            log('Updating %s' % (self.state.name))
+            log(f'Updating {self.state.name}')
             self.state.update(self)
 
     # When pausing, don't exit the state
@@ -242,10 +241,10 @@ class StateMachine(object):
     # When resuming, don't re-enter the state
     def resume_state(self, state_name):
         if self.state:
-            log('Exiting %s' % (self.state.name))
+            log(f'Exiting {self.state.name}')
             self.state.exit(self)
         self.state = self.states[state_name]
-        log('Resuming %s' % (self.state.name))
+        log(f'Resuming {self.state.name}')
 
     def reset_fireworks(self):
         """As indicated, reset the fireworks system's variables."""

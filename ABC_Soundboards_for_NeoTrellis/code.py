@@ -76,19 +76,18 @@ trellis = adafruit_trellism4.TrellisM4Express(rotation=0)
 # Play the welcome wav (if its there)
 with audioio.AudioOut(board.A1, right_channel=board.A0) as audio:
     try:
-        f = open(SAMPLE_FOLDER+SAMPLES[27][0], "rb")  # Use 02.wav as welcome
-        wave = audiocore.WaveFile(f)
-        audio.play(wave)
-        swirl = 0  # we'll swirl through the colors in the gradient
-        while audio.playing:
-            for i in range(32):
-                palette_index = ((swirl+i) % 32) / 32
-                color = fancy.palette_lookup(INTRO_SWIRL, palette_index)
-                # display it!
-                trellis.pixels[(i%8, i//8)] = color.pack()
-            swirl += 1
-            time.sleep(0.005)
-        f.close()
+        with open(SAMPLE_FOLDER+SAMPLES[27][0], "rb") as f:
+            wave = audiocore.WaveFile(f)
+            audio.play(wave)
+            swirl = 0  # we'll swirl through the colors in the gradient
+            while audio.playing:
+                for i in range(32):
+                    palette_index = ((swirl+i) % 32) / 32
+                    color = fancy.palette_lookup(INTRO_SWIRL, palette_index)
+                    # display it!
+                    trellis.pixels[(i%8, i//8)] = color.pack()
+                swirl += 1
+                time.sleep(0.005)
         # just hold a moment
         time.sleep(0.5)
     except OSError:
@@ -122,12 +121,6 @@ for i, v in enumerate(SAMPLES):
             print(filename,
                   "%d channels, %d bits per sample, %d Hz sample rate " %
                   (wav.channel_count, wav.bits_per_sample, wav.sample_rate))
-            if wav.channel_count != channel_count:
-                pass
-            if wav.bits_per_sample != bits_per_sample:
-                pass
-            if wav.sample_rate != sample_rate:
-                pass
             trellis.pixels[(i%8, i//8)] = v[1]
             if PLAY_SAMPLES_ON_START:
                 audio.play(wav)

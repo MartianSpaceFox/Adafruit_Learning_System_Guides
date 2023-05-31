@@ -17,18 +17,15 @@ highest_breath_result = 0
 
 def warmup_message():
     warmup_time = 20
-    warmup_counter = 0
-
     # initial read required to get sensor going
     sgp30.iaq_measure()
 
     print()
     print("Warming Up [%d seconds]..." % warmup_time)
 
-    while warmup_counter <= 20:
+    for _ in range(21):
         print('.', end='')
         time.sleep(1)
-        warmup_counter += 1
 
 
 def get_breath_reading():
@@ -52,9 +49,7 @@ def get_breath_reading():
         breath_counter += 1
 
     breath_saves = sorted(breath_saves)
-    result = breath_saves[breath_counter - 1]
-
-    return result
+    return breath_saves[breath_counter - 1]
 
 
 # show the highest reading recorded

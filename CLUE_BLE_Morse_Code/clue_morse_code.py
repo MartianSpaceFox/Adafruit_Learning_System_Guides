@@ -94,15 +94,14 @@ def scan_and_connect():
                     ble.stop_scan()
                     friend = adv
                     print("Found", friend.complete_name)
-                    in_label.text = "Found {}".format(friend.complete_name)
+                    in_label.text = f"Found {friend.complete_name}"
                     out_label.text = "A+B to connect"
                     break
-        else:
-            if clue.button_a and clue.button_b:
-                # Connect to friend
-                print("Connecting to", friend.complete_name)
-                ble.connect(friend)
-                central = True
+        elif clue.button_a and clue.button_b:
+            # Connect to friend
+            print("Connecting to", friend.complete_name)
+            ble.connect(friend)
+            central = True
 
     # We're now connected, one way or the other
     print("Stopping advertising.")
@@ -137,9 +136,7 @@ while True:
     # Run the chat while connected
     while ble.connected:
 
-        # Check for incoming message
-        incoming_bytes = uart.in_waiting
-        if incoming_bytes:
+        if incoming_bytes := uart.in_waiting:
             bytes_in = uart.read(incoming_bytes)
             print("Received: ", bytes_in)
             in_label.text = in_label.text[incoming_bytes:] + bytes_in.decode()

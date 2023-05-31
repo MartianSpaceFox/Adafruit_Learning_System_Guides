@@ -232,6 +232,8 @@ RPS_ACK_ID = 0xfe30
 RPS_DATA_ID = 0xfe31
 
 
+
+
 class RpsAdvertisement(Advertisement):
     """Broadcast an RPS message.
        This is not connectable and elicits no scan_response based on defaults
@@ -249,8 +251,8 @@ class RpsAdvertisement(Advertisement):
             _PREFIX_FMT,
             MANUFACTURING_DATA_ADT,
             ADAFRUIT_COMPANY_ID,
-            struct.calcsize("<H" + _DATA_FMT),
-            RPS_DATA_ID
+            struct.calcsize(f"<H{_DATA_FMT}"),
+            RPS_DATA_ID,
         ),
     )
     manufacturer_data = LazyObjectField(
@@ -261,8 +263,9 @@ class RpsAdvertisement(Advertisement):
         key_encoding="<H",
     )
 
-    test_string = ManufacturerDataField(RPS_DATA_ID, "<" + _DATA_FMT)
+    test_string = ManufacturerDataField(RPS_DATA_ID, f"<{_DATA_FMT}")
     """RPS choice."""
+
 
 
 NS_IN_S = 1000 * 1000  * 1000
@@ -373,7 +376,7 @@ while True:
                 if opponent_choice_bytes[idx] == 0:
                     break
                 idx += 1
-            opponent_choice = opponent_choice_bytes[0:idx].decode("utf-8")
+            opponent_choice = opponent_choice_bytes[:idx].decode("utf-8")
             break
 
         # We have received one message or exceeded MAX_SEND_TIME_S

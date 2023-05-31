@@ -170,7 +170,7 @@ range_lock = False
 initial_title = "CLUE Plotter"
 # displayio has some static limits on text - pre-calculate the maximum
 # length of all of the different PlotSource objects
-max_title_len = max(len(initial_title), max([len(str(so)) for so in sources]))
+max_title_len = max(len(initial_title), max(len(str(so)) for so in sources))
 plotter = Plotter(board.DISPLAY,
                   style=stylemodes[current_sm_idx][0],
                   mode=stylemodes[current_sm_idx][1],

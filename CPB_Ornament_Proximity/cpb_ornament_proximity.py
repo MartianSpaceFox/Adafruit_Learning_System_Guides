@@ -5,6 +5,7 @@ signal received. Circuit Playgrounds can be switched between advertising and sca
 slide switch. The buttons change the color when advertising.
 """
 
+
 import time
 from adafruit_circuitplayground.bluefruit import cpb
 
@@ -52,18 +53,15 @@ while True:
                 ble.start_advertising(advertisement)
                 time.sleep(0.5)
         ble.stop_advertising()
-    # The second mode listens for color broadcasts and shows the color of the strongest signal.
     else:
         closest = None
         closest_rssi = -80
         closest_last_time = 0
         print("Scanning for colors")
+        new = False
         while not cpb.switch:
             for entry in ble.start_scan(AdafruitColor, minimum_rssi=-100, timeout=1):
-                if cpb.switch:
-                    break
                 now = time.monotonic()
-                new = False
                 if entry.address == closest:
                     pass
                 elif entry.rssi > closest_rssi or now - closest_last_time > 0.4:

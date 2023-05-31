@@ -25,9 +25,5 @@ def play_it():
 while True:
     # playback mode. Use the slide switch to change between
     #   trigger via touch or via single tap
-    if cpx.switch:
-        if cpx.touch_A1:
-            play_it()
-    else:
-        if cpx.tapped:
-            play_it()
+    if cpx.switch and cpx.touch_A1 or not cpx.switch and cpx.tapped:
+        play_it()

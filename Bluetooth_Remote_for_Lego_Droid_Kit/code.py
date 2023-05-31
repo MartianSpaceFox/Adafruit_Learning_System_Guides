@@ -72,12 +72,12 @@ def send(command):
     vllstart()
     v = (vllchksum(command) << 7 ) + command
     i = 0x200
-    while i>0 :
+    while i>0:
         if v & i:
             vll1()
         else:
             vll0()
-        i = i >> 1
+        i >>= 1
     vllstop()
 
 def pause():
@@ -130,7 +130,7 @@ def check_connection(n_sec):
 while True:
     # Initialize the module
     init_bluefruit()
-    try:        # Wireless connections can have corrupt data or other runtime failures
+    try:    # Wireless connections can have corrupt data or other runtime failures
                 # This try block will reset the module if that happens
         while True:
             # Once connected, check for incoming BLE UART data
@@ -153,12 +153,6 @@ while True:
                         send(MS_REV)
                     elif button_num == BUTTON_1:
                         send(MS_BEEP)
-                    else:
-                        # some other key pressed
-                        pass
-            else:  # Not connected
-                pass
-
     except RuntimeError as e:
         print(e)  # Print what happened
         continue  # retry!

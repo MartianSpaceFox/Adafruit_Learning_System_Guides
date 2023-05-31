@@ -8,9 +8,7 @@ from adafruit_circuitplayground.express import cpx
 
 cap_pins = (board.A1, board.A2, board.A3, board.A4, board.A5,
             board.A6, board.A7)
-touch_pads = []
-for i in range(7):
-    touch_pads.append(touchio.TouchIn(cap_pins[i]))
+touch_pads = [touchio.TouchIn(cap_pins[i]) for i in range(7)]
 for touch_pad in touch_pads:
     touch_pad.threshold = 3500  # adjust value to fine-tune touch threshold
 

@@ -103,8 +103,5 @@ while True:
     else:  # Docked
         boundary_violations = 0
         voltage = battery.value * 3.3 / 65535 * 2
-        if voltage < 3.7:
-            pulse.period = 1  # Speed up LED pulse for low battery
-        else:
-            pulse.period = 3
+        pulse.period = 1 if voltage < 3.7 else 3
         pulse.animate()

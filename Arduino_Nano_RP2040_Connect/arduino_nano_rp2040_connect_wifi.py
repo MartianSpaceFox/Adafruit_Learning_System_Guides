@@ -3,6 +3,7 @@ library example esp32spi_simpletest.py:
 https://github.com/adafruit/Adafruit_CircuitPython_ESP32SPI/
 blob/master/examples/esp32spi_simpletest.py '''
 
+
 import board
 import busio
 from digitalio import DigitalInOut
@@ -52,7 +53,7 @@ print("Connected to", str(esp.ssid, "utf-8"), "\tRSSI:", esp.rssi)
 print("My IP address is", esp.pretty_ip(esp.ip_address))
 
 print(
-    "IP lookup adafruit.com: %s" % esp.pretty_ip(esp.get_host_by_name("adafruit.com"))
+    f'IP lookup adafruit.com: {esp.pretty_ip(esp.get_host_by_name("adafruit.com"))}'
 )
 
 print("Fetching text from", TEXT_URL)

@@ -61,7 +61,7 @@ clue.display.show(clue_display)
 def countdown(seconds):
     for i in range(seconds):
         buzzer.duty_cycle = 2**15
-        timer_label.text = ("Scrub time:  {}".format(seconds-i))
+        timer_label.text = f"Scrub time:  {seconds - i}"
         buzzer.duty_cycle = 0
         time.sleep(1)
     timer_label.text = ("Done!")
