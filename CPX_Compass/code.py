@@ -66,13 +66,13 @@ def warm_up():
 
 
 def calibrate(do_the_readings):
-    values = [0.0, 0.0]
     start_time = time.monotonic()
 
     fill(GREEN)
 
     # Update the high and low extremes
     if do_the_readings:
+        values = [0.0, 0.0]
         while time.monotonic() - start_time < 10.0:
             values[0], values[1], _ = compass.magnetic
             values[1] *= -1                           # accel is upside down, so y is reversed
@@ -132,11 +132,9 @@ while True:
         normalized_x = normalize(x - corrections[0], mins[0], maxes[0])
         normalized_y = normalize(y - corrections[1], mins[1], maxes[1])
 
-        compass_heading = int(math.atan2(normalized_y, normalized_x) * 180.0 / math.pi)
-        # compass_heading is between -180 and +180 since atan2 returns -pi to +pi
-        # this translates it to be between 0 and 360
-        compass_heading += 180
-
+        compass_heading = (
+            int(math.atan2(normalized_y, normalized_x) * 180.0 / math.pi) + 180
+        )
         direction_index = ((compass_heading + 15) % 360) // 30
 
         pixels.fill(BLACK)

@@ -89,8 +89,7 @@ def read_region(timeout=30):
 
 def play_sequence(sequence):
     duration = 1 - len(sequence) * 0.05
-    if duration < 0.1:
-        duration = 0.1
+    duration = max(duration, 0.1)
     for region in sequence:
         light_region(region, duration)
 

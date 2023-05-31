@@ -98,7 +98,7 @@ def on_message(client, topic, message):
 
 def on_relay_msg(client, topic, value):
     # Called when relay feed obtains a new value
-    print("Turning Relay %s"%value)
+    print(f"Turning Relay {value}")
     if value == "ON":
         power_pin.value = True
     elif value == "OFF":
@@ -157,12 +157,11 @@ while True:
                     # Appliance is ON, publish to feed_status
                     print("Appliance ON, publishing to IO...")
                     client.publish(feed_status, 1)
-                    print("Published!")
                 else:
                     # Appliance is OFF, publish to feed_status
                     print("Appliance OFF, publishing to IO...")
                     client.publish(feed_status, 2)
-                    print("Published!")
+                print("Published!")
                 prv_sensor_value = sensor_value
             start_time = now
     except (ValueError, RuntimeError) as e:

@@ -60,7 +60,7 @@ def new_game(skill_level):
     random.seed(seed)    
 
     # Populate the game sequence
-    return [random.randint(1,4) for i in range(SEQUENCE_LENGTH[skill_level])]
+    return [random.randint(1,4) for _ in range(SEQUENCE_LENGTH[skill_level])]
 
 def indicate_button(button, duration):
     # Turn them all off
@@ -69,7 +69,7 @@ def indicate_button(button, duration):
     for p in button['pixels']:
         cpx.pixels[p] = button['color']
     # Play button tone
-    if button['freq'] == None:
+    if button['freq'] is None:
         time.sleep(duration)
     else:
         cpx.play_tone(button['freq'], duration)
@@ -124,29 +124,29 @@ def game_lost(step):
     
 def game_won():
     # Play 'razz' special victory signal
-    for i in range(3):
-        indicate_button(SIMON_BUTTONS[4], 0.1)        
-        indicate_button(SIMON_BUTTONS[2], 0.1)        
-        indicate_button(SIMON_BUTTONS[3], 0.1)        
-        indicate_button(SIMON_BUTTONS[1], 0.1)        
-    indicate_button(SIMON_BUTTONS[4], 0.1)            
+    for _ in range(3):
+        indicate_button(SIMON_BUTTONS[4], 0.1)
+        indicate_button(SIMON_BUTTONS[2], 0.1)
+        indicate_button(SIMON_BUTTONS[3], 0.1)
+        indicate_button(SIMON_BUTTONS[1], 0.1)
+    indicate_button(SIMON_BUTTONS[4], 0.1)
     indicate_button(SIMON_BUTTONS[2], 0.1)
 
     # Change tones to failure tone
     for button in SIMON_BUTTONS.values():
         button['freq'] = FAILURE_TONE
-        
+
     # Continue for another 0.8 seconds
-    for i in range(2):
-        indicate_button(SIMON_BUTTONS[3], 0.1)        
-        indicate_button(SIMON_BUTTONS[1], 0.1)        
-        indicate_button(SIMON_BUTTONS[4], 0.1)        
+    for _ in range(2):
+        indicate_button(SIMON_BUTTONS[3], 0.1)
+        indicate_button(SIMON_BUTTONS[1], 0.1)
+        indicate_button(SIMON_BUTTONS[4], 0.1)
         indicate_button(SIMON_BUTTONS[2], 0.1)        
-    
+
     # Change tones to silence
     for button in SIMON_BUTTONS.values():
         button['freq'] = None
-    
+
     # Loop lights forever
     while True:
         indicate_button(SIMON_BUTTONS[3], 0.1)        
@@ -165,20 +165,23 @@ current_step = 1
 while True:
     # Show sequence up to current step
     show_sequence(sequence, current_step)
-    
+
     # Read player button presses
     for step in range(current_step):
         start_guess_time = time.monotonic()
         guess = None
-        while (time.monotonic() - start_guess_time < GUESS_TIMEOUT) and (guess == None):
+        while (
+            time.monotonic() - start_guess_time < GUESS_TIMEOUT
+            and guess is None
+        ):
             guess = get_button_press()
-        if not guess == SIMON_BUTTONS[sequence[step]]:
+        if guess != SIMON_BUTTONS[sequence[step]]:
             game_lost(sequence[step])
 
     # Advance the game forward
     current_step += 1
     if current_step > len(sequence):
         game_won()
-    
+
     # Small delay before continuing    
     time.sleep(SEQUENCE_DELAY)

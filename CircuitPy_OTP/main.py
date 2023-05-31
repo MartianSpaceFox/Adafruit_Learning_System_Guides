@@ -136,7 +136,7 @@ def generate_otp(int_input, secret_key, digits=6):
             (hmac_hash[offset + 3] & 0xff))
     str_code = str(code % 10 ** digits)
     while len(str_code) < digits:
-        str_code = '0' + str_code
+        str_code = f'0{str_code}'
 
     return str_code
 
@@ -160,7 +160,7 @@ if not sta_if.isconnected():
 print("Connected! IP = ", sta_if.ifconfig()[0])
 
 # Done! Let them know we made it
-oled.text("IP: " + sta_if.ifconfig()[0], 0, 20)
+oled.text(f"IP: {sta_if.ifconfig()[0]}", 0, 20)
 oled.show()
 time.sleep(0.25)
 
@@ -197,8 +197,8 @@ while ALWAYS_ON or (countdown > 0):
     # We can do up to 3 per line on the Feather OLED
     for name, secret in totp:
         otp = generate_otp(unix_time // 30, secret)
-        print(name + " OTP output: ", otp)  # serial debugging output
-        oled.text(name + ": " + str(otp), 0, y)  # display name & OTP on OLED
+        print(f"{name} OTP output: ", otp)
+        oled.text(f"{name}: {str(otp)}", 0, y)
         y += 10  # Go to next line on OLED
     # Display a little bar that 'counts down' how many seconds you have left
     oled.framebuf.line(0, 31, 128 - (unix_time % 30) * 4, 31, True)

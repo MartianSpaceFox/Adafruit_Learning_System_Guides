@@ -139,7 +139,6 @@ while True:
                 # Set all the pixels to one color and stay there.
                 pixels.fill(packet.color)
                 pixels.show()
-            # Control Pad Functionality
             elif isinstance(packet, ButtonPacket):
                 if packet.pressed:
                     if packet.button == ButtonPacket.BUTTON_1:
@@ -154,24 +153,20 @@ while True:
                     elif packet.button == ButtonPacket.BUTTON_4:
                         MODE = 1
                         animations.activate(4)
-                    # change the mode with right arrow
                     elif packet.button == ButtonPacket.RIGHT:
                         MODE = 1
                         animations.next()
                     elif packet.button == ButtonPacket.LEFT:
                         MODE = 4
                         off.animate()
-                    #change the brightness with up and down arrows
                     elif packet.button == ButtonPacket.UP:
                         pixels.brightness = pixels.brightness + 0.1
                         pixels.show()
-                        if pixels.brightness > 1:
-                            pixels.brightness = 1
+                        pixels.brightness = min(pixels.brightness, 1)
                     elif packet.button == ButtonPacket.DOWN:
                         pixels.brightness = pixels.brightness - 0.1
                         pixels.show()
-                        if pixels.brightness < 0.1:
-                            pixels.brightness = 0.1
+                        pixels.brightness = max(pixels.brightness, 0.1)
         if MODE == 1:
             animations.animate()
         if MODE == 4:

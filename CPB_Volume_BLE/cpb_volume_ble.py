@@ -84,9 +84,7 @@ while True:
             advertising = True
         continue
     else:
-        if connection_made:
-            pass
-        else:
+        if not connection_made:
             ring.fill(FILL_COLOR)
             ring.show()
             connection_made = True
@@ -116,12 +114,11 @@ while True:
     if not button.value:
         if not muted:
             print("Muting")
-            cc.send(ConsumerControlCode.MUTE)
             muted = True
         else:
             print("Unmuting")
-            cc.send(ConsumerControlCode.MUTE)
             muted = False
+        cc.send(ConsumerControlCode.MUTE)
         draw()
         while not button.value:  # debounce
             time.sleep(0.1)

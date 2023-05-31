@@ -55,13 +55,13 @@ def make_label(text, x, y, color, max_glyphs=30, font=terminalio.FONT):
     return text_area
 
 def set_label(label, value, max_length):
-    text = "{}".format(value)
+    text = f"{value}"
     if len(text) > max_length:
-        text = text[:max_length-3] + "..."
+        text = f"{text[:max_length - 3]}..."
     label.text = text
 
 def set_status(label, action_text, player):
-    label.text = "{} on {}".format(action_text, player)
+    label.text = f"{action_text} on {player}"
     _, _, label_width, _ = label.bounding_box
     label.x = display.width - 10 - label_width
 

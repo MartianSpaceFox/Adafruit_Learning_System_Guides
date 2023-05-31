@@ -148,8 +148,7 @@ def wheel(pos):
 
 def cycle_sequence(seq):
     while True:
-        for elem in seq:
-            yield elem
+        yield from seq
 
 def rainbow_lamp(seq):
     g = cycle_sequence(seq)

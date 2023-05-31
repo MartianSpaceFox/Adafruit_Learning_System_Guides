@@ -76,10 +76,13 @@ def addpoints(points, min_dist):
 if adafruit_logo_vector.offset_x != 0 or adafruit_logo_vector.offset_y != 0:
     data = []
     for part in adafruit_logo_vector.data:
-        newpart = []
-        for point in part:
-            newpart.append((point[0] - adafruit_logo_vector.offset_x,
-                            point[1] - adafruit_logo_vector.offset_y))
+        newpart = [
+            (
+                point[0] - adafruit_logo_vector.offset_x,
+                point[1] - adafruit_logo_vector.offset_y,
+            )
+            for point in part
+        ]
         data.append(newpart)
 else:
     data = adafruit_logo_vector.data

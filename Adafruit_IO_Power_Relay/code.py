@@ -84,7 +84,7 @@ def on_message(client, topic, message):
 
 def on_relay_msg(client, topic, value):
     # Called when relay feed obtains a new value
-    print("Turning Relay %s"%value)
+    print(f"Turning Relay {value}")
     if value == "ON":
         power_pin.value = True
     elif value == "OFF":

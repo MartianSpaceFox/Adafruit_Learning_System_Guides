@@ -69,14 +69,14 @@ while True:
         pos = mc.player.getPos()
         block = mc.getBlock(pos.x, pos.y, pos.z)
         inWater = block == water
-        mc.postToChat("In water: " + str(inWater))
+        mc.postToChat(f"In water: {inWater}")
     pad3_already_pressed = pad3_pressed
 
     if pad4_pressed and not pad4_already_pressed:
         #Immutable
         immutable = not immutable
         mc.setting("world_immutable", immutable)
-        mc.postToChat("Immutable: " + str(immutable))
+        mc.postToChat(f"Immutable: {immutable}")
     pad4_already_pressed = pad4_pressed
 
     time.sleep(0.1)

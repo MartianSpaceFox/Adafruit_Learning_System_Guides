@@ -94,7 +94,7 @@ while True:
             wave[w][value_pixel] = wave[w][value_frame]
 
     # Render current animation frame.  COGNITIVE HAZARD: fixed point math.
-    for i in range(n_leds):                             # for each LED along strip...
+    for i in range(n_leds):                         # for each LED along strip...
         # Coarse (8-bit) HSV-to-RGB conversion, hue first:
         n = (wave[wave_h][value_pixel] % 43) * 6   # angle within sextant
 
@@ -142,29 +142,21 @@ while True:
                 s = s<<1
                 s1 = 1 + s
                 s = 255 - s
-        else:
-            if s & 0x80:                # square wave
-                s1 = 256                # 100% saturation
-                s = 0
-            else:                       # 0% saturation
-                s1 = 1
-                s = 255
+        elif s & 0x80:                # square wave
+            s1 = 256                # 100% saturation
+            s = 0
+        else:                       # 0% saturation
+            s1 = 1
+            s = 255
 
         # Value (brightness) = 1-256 for similar reasons
         v = wave[wave_v][value_pixel]
 
         # value (brightness) = 1-256 for similar reasons
         if wave[wave_v][wave_type]:     # triangle wave?
-            if v & 0x80:                # downslope
-                v1 = 64 - ((v & 0x7F) << 1)
-            else:                       # upslope
-                v1 = 1 + (v << 1)
+            v1 = 64 - ((v & 0x7F) << 1) if v & 0x80 else 1 + (v << 1)
         else:
-            if v & 0x80:                # square wave; on/off
-                v1 = 256
-            else:
-                v1 = 1
-
+            v1 = 256 if v & 0x80 else 1
         # gamma rgb values
         gr = ((((r * s1) >> 8) + s) * v1) >> 8
         gg = ((((g * s1) >> 8) + s) * v1) >> 8

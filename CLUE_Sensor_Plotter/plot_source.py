@@ -77,15 +77,9 @@ class PlotSource():
         self._abs_max = abs_max
         self._initial_min = initial_min if initial_min is not None else abs_min
         self._initial_max = initial_max if initial_max is not None else abs_max
-        if range_min is None:
-            self._range_min = (abs_max - abs_min) / 100  # 1% of full range
-        else:
-            self._range_min = range_min
+        self._range_min = (abs_max - abs_min) / 100 if range_min is None else range_min
         self._rate = rate
-        if colors is not None:
-            self._colors = colors
-        else:
-            self._colors = self.DEFAULT_COLORS[:values]
+        self._colors = colors if colors is not None else self.DEFAULT_COLORS[:values]
         self._debug = debug
 
     def __str__(self):
@@ -222,7 +216,7 @@ class HumidityPlotSource(PlotSource):
 class PinPlotSource(PlotSource):
     def __init__(self, pin):
         try:
-            pins = [p for p in pin]
+            pins = list(pin)
         except TypeError:
             pins = [pin]
 
@@ -242,8 +236,7 @@ class PinPlotSource(PlotSource):
         if len(self._analogin) == 1:
             return self._analogin[0].value * self._conversion_factor
         else:
-            return tuple([ana.value * self._conversion_factor
-                          for ana in self._analogin])
+            return tuple(ana.value * self._conversion_factor for ana in self._analogin)
 
     def pins(self):
         return self._pins
@@ -286,11 +279,16 @@ class IlluminatedColorPlotSource(PlotSource):
             raise ValueError("Colour must be Red, Green, Blue or Clear")
 
         self._channel = col_fl_lc
-        super().__init__(1, "Illum. color: " + self._channel.upper(),
-                         abs_min=0, abs_max=8000,
-                         initial_min=0, initial_max=2000,
-                         colors=(plot_colour,),
-                         rate=50)
+        super().__init__(
+            1,
+            f"Illum. color: {self._channel.upper()}",
+            abs_min=0,
+            abs_max=8000,
+            initial_min=0,
+            initial_max=2000,
+            colors=(plot_colour,),
+            rate=50,
+        )
 
     def data(self):
         (r, g, b, c) = self._clue.color

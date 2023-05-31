@@ -61,15 +61,11 @@ def format_width(nchars, value):
        with values > 99999 or < -9999 or < -99.9."""
     neg_format = _FMT_DEC_PLACES[nchars - 3]
     pos_format = _FMT_DEC_PLACES[nchars - 2]
-    if value <= -10.0:
-        text_value = neg_format.format(value)  # may overflow width
-    elif value < 0.0:
-        text_value = neg_format.format(value)
-    elif value >= 10.0:
-        text_value = pos_format.format(value)  # may overflow width
-    else:
-        text_value = pos_format.format(value)  # 0.0 to 9.99999
-    return text_value
+    return (
+        neg_format.format(value)
+        if value <= -10.0 or value < 0.0
+        else pos_format.format(value)
+    )
 
 
 class Plotter():
@@ -120,10 +116,7 @@ class Plotter():
     def _display_refresh(self):
         """Intention was to call self._output.refresh() but this does not work well
            as current implementation is designed with a fixed frame rate in mind."""
-        if self._output.auto_refresh:
-            return True
-        else:
-            return True
+        return True
 
     def __init__(self, output,
                  style="lines", mode="scroll", scale_mode=None,
@@ -467,9 +460,8 @@ class Plotter():
                     # Python supports negative array index
                     prev_y_pos = self._data_y_pos[ch_idx][data_idx - 1]
                     self._draw_vline(x_pos, prev_y_pos, y_pos, col_idx)
-                else:
-                    if 0 <= y_pos <= self._plot_height_m1:
-                        self._displayio_plot[x_pos, y_pos] = col_idx
+                elif 0 <= y_pos <= self._plot_height_m1:
+                    self._displayio_plot[x_pos, y_pos] = col_idx
                 data_idx += 1
                 if data_idx >= self._data_size:
                     data_idx = 0
@@ -498,9 +490,8 @@ class Plotter():
                 # Python supports negative array index
                 prev_y_pos = self._data_y_pos[ch_idx][data_idx - 1]
                 self._draw_vline(x_pos, prev_y_pos, y_pos, colidx)
-            else:
-                if 0 <= y_pos <= self._plot_height_m1:
-                    self._displayio_plot[x_pos, y_pos] = colidx
+            elif 0 <= y_pos <= self._plot_height_m1:
+                self._displayio_plot[x_pos, y_pos] = colidx
 
     # very similar code to _undraw_bitmap although that is now
     # more sophisticated as it supports wrap mode
@@ -515,9 +506,8 @@ class Plotter():
                     # Python supports negative array index
                     prev_y_pos = self._data_y_pos[ch_idx][data_idx - 1]
                     self._draw_vline(x_pos, prev_y_pos, y_pos, colidx)
-                else:
-                    if 0 <= y_pos <= self._plot_height_m1:
-                        self._displayio_plot[x_pos, y_pos] = colidx
+                elif 0 <= y_pos <= self._plot_height_m1:
+                    self._displayio_plot[x_pos, y_pos] = colidx
                 data_idx += 1
                 if data_idx >= self._data_size:
                     data_idx = 0
@@ -577,10 +567,9 @@ class Plotter():
                 self._draw_vline(x_pos, prev_y_pos, y_pos,
                                  self._channel_colidx[ch_idx])
                 self._plot_dirty = True  # bit wrong if whole line is off screen
-            else:
-                if not offscale:
-                    self._displayio_plot[x_pos, y_pos] = self._channel_colidx[ch_idx]
-                    self._plot_dirty = True
+            elif not offscale:
+                self._displayio_plot[x_pos, y_pos] = self._channel_colidx[ch_idx]
+                self._plot_dirty = True
 
     def _check_zoom_in(self):
         """Check if recent data warrants zooming in on y axis scale based on checking
@@ -636,14 +625,12 @@ class Plotter():
                                  redraw_plot=redraw_plot)
             zoom_out = True
 
-        else:  # otherwise check if zoom in is warranted
-            rescale_zoom_range = self._check_zoom_in()
-            if rescale_zoom_range:
-                if self._debug >= 2:
-                    print("Zoom in")
-                self._change_y_range(rescale_zoom_range[0], rescale_zoom_range[1],
-                                     redraw_plot=redraw_plot)
-                zoom_in = True
+        elif rescale_zoom_range := self._check_zoom_in():
+            if self._debug >= 2:
+                print("Zoom in")
+            self._change_y_range(rescale_zoom_range[0], rescale_zoom_range[1],
+                                 redraw_plot=redraw_plot)
+            zoom_in = True
 
         if zoom_in or zoom_out:
             self._plot_lastzoom_ns = time.monotonic_ns()
@@ -692,16 +679,10 @@ class Plotter():
 
         # increment x position dealing with wrap/scroll
         new_x_pos = x_pos + 1
-        if new_x_pos >= self._plot_width:
-            # fallen off edge so wrap or leave position
-            # on last column for scroll
-            if self._mode == "wrap":
-                self._x_pos = 0
-            else:
-                self._x_pos = new_x_pos  # this is off screen
+        if new_x_pos >= self._plot_width and self._mode == "wrap":
+            self._x_pos = 0
         else:
-            self._x_pos = new_x_pos
-
+            self._x_pos = new_x_pos  # this is off screen
         if self._data_values < self._data_size:
             self._data_values += 1
 
@@ -718,8 +699,7 @@ class Plotter():
         y_min = new_plot_min
         y_max = new_plot_max
         if self._debug >= 2:
-            print("Change Y range", new_plot_min, new_plot_max, redraw_plot)
-
+            print("Change Y range", y_min, y_max, redraw_plot)
         # if values reduce range below the minimum then widen the range
         # but keep it within the absolute min/max values
         if self._plot_min_range is not None:
@@ -755,9 +735,7 @@ class Plotter():
 
     @property
     def info(self):
-        if self._displayio_info is None:
-            return None
-        return self._displayio_info.text
+        return None if self._displayio_info is None else self._displayio_info.text
 
     @info.setter
     def info(self, value):
@@ -773,7 +751,7 @@ class Plotter():
 
             font_w, font_h = self._font.get_bounding_box()
             text_lines = value.split("\n")
-            max_word_chars = max([len(word) for word in text_lines])
+            max_word_chars = max(len(word) for word in text_lines)
             # If too large reduce the scale
             if (max_word_chars * font_scale * font_w > self._screen_width
                     or len(text_lines) * font_scale * font_h * line_spacing > self._screen_height):

@@ -15,8 +15,7 @@ while True:
         pass
     print("Connected")
     while ble.connected:
-        s = uart.readline()
-        if s:
+        if s := uart.readline():
             try:
                 result = str(eval(s))
             except Exception as e:

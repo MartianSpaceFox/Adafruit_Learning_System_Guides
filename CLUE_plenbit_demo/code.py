@@ -13,9 +13,10 @@ pca.frequency = 50
 servoSetInit = (1000, 630, 500, 600, 240, 600, 1000, 720)
 servoAngle = [1000, 630, 500, 600, 240, 600, 1000, 720]
 motionSpeed = 15
-servos = []
-for c in range(8):
-    servos.append(servo.Servo(pca.channels[c], min_pulse=800, max_pulse=2200))
+servos = [
+    servo.Servo(pca.channels[c], min_pulse=800, max_pulse=2200)
+    for c in range(8)
+]
 
 def servoInitialSet():
     print("Initialize servos")

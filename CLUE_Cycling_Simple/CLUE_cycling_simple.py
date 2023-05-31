@@ -4,6 +4,7 @@ Cycling Speed and Cadence (CSC) Service.
 Works with single sensor (e.g., Wahoo Blue SC) or sensor pair, such as Wahoo RPM
 """
 
+
 import time
 from adafruit_clue import clue
 import adafruit_ble
@@ -53,10 +54,9 @@ while True:
                 print("No device information")
 
     print("Waiting for data... (could be 10-20 seconds or more)")
-    # Get CSC Service from each sensor.
-    cyc_services = []
-    for conn in cyc_connections:
-        cyc_services.append(conn[CyclingSpeedAndCadenceService])
+    cyc_services = [
+        conn[CyclingSpeedAndCadenceService] for conn in cyc_connections
+    ]
     # Read data from each sensor once a second.
     # Stop if we lose connection to all sensors.
 

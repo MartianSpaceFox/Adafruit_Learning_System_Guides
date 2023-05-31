@@ -1,4 +1,5 @@
 """CircuitPython Digital Input Example for FunHouse"""
+
 import board
 import digitalio
 
@@ -9,7 +10,4 @@ button = digitalio.DigitalInOut(board.BUTTON_UP)
 button.switch_to_input(pull=digitalio.Pull.DOWN)
 
 while True:
-    if not button.value:
-        led.value = False
-    else:
-        led.value = True
+    led.value = bool(button.value)

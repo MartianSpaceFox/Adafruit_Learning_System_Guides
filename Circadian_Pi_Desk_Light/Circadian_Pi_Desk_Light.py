@@ -27,16 +27,16 @@ while True:
         color = (0, 0, 255)
         color_change = True
 
-    elif date_string == end_morning:
+    elif (
+        date_string == end_morning
+        or date_string != start_night
+        and date_string == end_night
+    ):
         color = (0, 0, 0)
         color_change = True
 
     elif date_string == start_night:
         color = (255, 0, 0)
-        color_change = True
-
-    elif date_string == end_night:
-        color = (0, 0, 0)
         color_change = True
 
     else:

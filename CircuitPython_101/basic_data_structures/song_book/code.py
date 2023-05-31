@@ -72,12 +72,10 @@ def play_song(songname):
 
 def update(songnames, selected):
     oled.fill(0)
-    line = 0
-    for songname in songnames:
+    for line, songname in enumerate(songnames):
         if line == selected:
             oled.text(">", 0, line * 8)
         oled.text(songname, 10, line * 8)
-        line += 1
     oled.show()
 
 

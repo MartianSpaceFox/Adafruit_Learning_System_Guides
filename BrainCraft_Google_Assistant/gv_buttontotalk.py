@@ -134,10 +134,10 @@ class SampleAssistant(object):
             return False
         self.conversation_stream.close()
 
-    def is_grpc_error_unavailable(e):
-        is_grpc_error = isinstance(e, grpc.RpcError)
-        if is_grpc_error and (e.code() == grpc.StatusCode.UNAVAILABLE):
-            logging.error("grpc unavailable error: %s", e)
+    def is_grpc_error_unavailable(self):
+        is_grpc_error = isinstance(self, grpc.RpcError)
+        if is_grpc_error and self.code() == grpc.StatusCode.UNAVAILABLE:
+            logging.error("grpc unavailable error: %s", self)
             return True
         return False
 
@@ -482,7 +482,7 @@ def main(
                     "Using device model %s and device id %s", device_model_id, device_id
                 )
         except Exception as e:
-            logging.warning("Device config not found: %s" % e)
+            logging.warning(f"Device config not found: {e}")
             logging.info("Registering device")
             if not device_model_id:
                 logging.error(
@@ -496,10 +496,7 @@ def main(
                     "when registering a device instance."
                 )
                 sys.exit(-1)
-            device_base_url = "https://%s/v1alpha2/projects/%s/devices" % (
-                api_endpoint,
-                project_id,
-            )
+            device_base_url = f"https://{api_endpoint}/v1alpha2/projects/{project_id}/devices"
             device_id = str(uuid.uuid1())
             payload = {
                 "id": device_id,
@@ -527,7 +524,7 @@ def main(
 
     @device_handler.command("com.example.commands.BlinkLight")
     def blink(speed, number):
-        logging.info("Blinking device %s times." % number)
+        logging.info(f"Blinking device {number} times.")
         delay = 1
         if speed == "SLOWLY":
             delay = 2

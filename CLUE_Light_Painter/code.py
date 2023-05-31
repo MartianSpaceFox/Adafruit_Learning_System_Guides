@@ -214,12 +214,14 @@ class ClueLightPainter:
         brightness = (self.brightness_range[0] + self.brightness *
                       (self.brightness_range[1] - self.brightness_range[0]))
         try:
-            self.num_rows = self.bmp2led.process(self.path + '/' +
-                                                 self.images[self.image_num],
-                                                 self.tempfile,
-                                                 rows, brightness,
-                                                 self.loop,
-                                                 self.load_progress)
+            self.num_rows = self.bmp2led.process(
+                f'{self.path}/{self.images[self.image_num]}',
+                self.tempfile,
+                rows,
+                brightness,
+                self.loop,
+                self.load_progress,
+            )
         except (MemoryError, BMPError):
             group = displayio.Group()
             group.append(centered_label('TOO BIG', 40, 3))
@@ -421,7 +423,7 @@ class ClueLightPainter:
         """
         group = self.make_ui_group(False, 'Time:',
                                    self.time / (len(TIMES) - 1))
-        group.append(centered_label(TIMES[self.time] + ' Sec', 70, 2))
+        group.append(centered_label(f'{TIMES[self.time]} Sec', 70, 2))
         orig_time, prev_time = self.time, self.time
 
         while True:
@@ -441,7 +443,7 @@ class ClueLightPainter:
                                   (self.time / (len(TIMES) - 1) - 1.0))
                 prev_time = self.time
                 group.pop()
-                group.append(centered_label(TIMES[self.time] + ' Sec', 70, 2))
+                group.append(centered_label(f'{TIMES[self.time]} Sec', 70, 2))
 
 
     def config_loop(self):

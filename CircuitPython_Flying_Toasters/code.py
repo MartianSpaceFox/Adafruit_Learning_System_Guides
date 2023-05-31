@@ -146,16 +146,10 @@ def get_entry_column():
 
 def add_toaster_or_toast():
     """Maybe add a new toaster or toast on the right and/or top at a randon open location"""
-    if randint(1, 10) <= CHANCE_OF_NEW_TOAST:
-        tile = TOAST
-    else:
-        tile = random_cell()
+    tile = TOAST if randint(1, 10) <= CHANCE_OF_NEW_TOAST else random_cell()
     tilegrid[4, get_entry_row()] = tile
 
-    if randint(1, 10) <= CHANCE_OF_NEW_TOAST:
-        tile = TOAST
-    else:
-        tile = random_cell()
+    tile = TOAST if randint(1, 10) <= CHANCE_OF_NEW_TOAST else random_cell()
     tilegrid[get_entry_column(), 0] = tile
 
 display = make_display()

@@ -39,7 +39,7 @@ while True:
             #print("CT" + str(i + 1) + " touched!")
             if not cap_state[i]:
                 cap_justtouched[i] = True
-                print("%s finger bent." % finger_name[i])
+                print(f"{finger_name[i]} finger bent.")
                 servos[i].angle = 0
             # store the fact that this pad is touched
             cap_state[i] = True
@@ -47,9 +47,9 @@ while True:
         else:
             if cap_state[i]:
                 cap_justreleased[i] = True
-                print("%s finger straightened." % finger_name[i])
+                print(f"{finger_name[i]} finger straightened.")
                 servos[i].angle = 180
-                # print("CT" + str(i + 1) + " released!")
+                            # print("CT" + str(i + 1) + " released!")
             # store the fact that this pad is NOT touched
             cap_state[i] = False
 

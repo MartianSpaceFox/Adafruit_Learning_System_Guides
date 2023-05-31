@@ -104,7 +104,7 @@ def write_wav(filename, data, framerate):
     wav_file.close()
 
 
-def main(cmdlineargs):  ### pylint: disable=too-many-branches
+def main(cmdlineargs):    ### pylint: disable=too-many-branches
     """main(args)"""
     global debug, fps, movie_file, output_filename, replaceforsync  ### pylint: disable=global-statement
     global threshold, start_offset, verbose  ### pylint: disable=global-statement
@@ -154,11 +154,7 @@ def main(cmdlineargs):  ### pylint: disable=too-many-branches
     for arg in args:
         if verbose:
             print("PROCESSING", arg)
-        if movie_file:
-            images = imageio.mimread(arg)
-        else:
-            images = [imageio.imread(arg)]
-
+        images = imageio.mimread(arg) if movie_file else [imageio.imread(arg)]
         for img in images:
             img_output, width, height = image_to_dac(img, row_offset,
                                                      first_pix, dac_y_range)

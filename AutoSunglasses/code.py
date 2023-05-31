@@ -12,6 +12,7 @@ Licensed under the MIT license.
 All text above must be included in any redistribution.
 """
 
+
 import time
 import board
 import pwmio
@@ -31,9 +32,5 @@ while True:
         cpx.pixels.fill((200, 200, 200))
     else:
         cpx.pixels.fill((0, 0, 0))
-        if light_level < 200:
-            my_servo.angle = 90
-        else:
-            my_servo.angle = 0
-
+        my_servo.angle = 90 if light_level < 200 else 0
     time.sleep(0.25)

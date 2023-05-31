@@ -1,4 +1,5 @@
 """CircuitPython Essentials Digital In Out example"""
+
 import time
 import board
 from digitalio import DigitalInOut, Direction, Pull
@@ -18,9 +19,5 @@ switch.pull = Pull.UP
 
 while True:
     # We could also do "led.value = not switch.value"!
-    if switch.value:
-        led.value = False
-    else:
-        led.value = True
-
+    led.value = not switch.value
     time.sleep(0.01)  # debounce delay

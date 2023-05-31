@@ -19,7 +19,7 @@ mcp = MCP.MCP3008(spi, cs)
 chan0 = AnalogIn(mcp, MCP.P0)
 
 print('Raw ADC Value: ', chan0.value)
-print('ADC Voltage: ' + str(chan0.voltage) + 'V')
+print(f'ADC Voltage: {str(chan0.voltage)}V')
 
 last_read = 0       # this keeps track of the last potentiometer value
 tolerance = 250     # to keep from being jittery we'll only change

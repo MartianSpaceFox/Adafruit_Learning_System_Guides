@@ -251,7 +251,7 @@ def connect():
     return (new_conn, new_uart)
 
 
-def ping_for_rtt():  # pylint: disable=too-many-branches,too-many-statements
+def ping_for_rtt():    # pylint: disable=too-many-branches,too-many-statements
     """Calculate the send time for Bluetooth Low Energy based from
        a series of round-trip time measurements and assuming that
        half of that is the send time.
@@ -261,9 +261,9 @@ def ping_for_rtt():  # pylint: disable=too-many-branches,too-many-statements
     # sent there's no value to send, -1.0 is specal first packet value
     rtt = TIME_NONE
     rtts = []
-    offsets = []
-
     if master_device:
+        offsets = []
+
         # Master code
         while True:
             gc.collect()  # an opportune moment
@@ -328,7 +328,7 @@ def ping_for_rtt():  # pylint: disable=too-many-branches,too-many-statements
         rtt_end = len(rtts)
 
     # Use quickest ones and hope any outlier times don't reoccur!
-    quicker_rtts = sorted(rtts[rtt_start:rtt_end])[0:(NUM_PINGS // 2) + 1]
+    quicker_rtts = sorted(rtts[rtt_start:rtt_end])[:(NUM_PINGS // 2) + 1]
     mean_rtt = sum(quicker_rtts) / len(quicker_rtts)
     # Assuming symmetry between send and receive times
     # this may not be perfectly true, parsing is one factor here
@@ -435,19 +435,18 @@ def show_winner(player_reaction, opponent_reaction):
             pixels[player_px[0]:player_px[1]] = misdraw_pixels
             l_colour = misdraw_colour  # overwrite any opponent_misdraw_colour
 
+    elif player_reaction < opponent_reaction:
+        l_win = True
+        pixels[player_px[0]:player_px[1]] = win_pixels
+        l_colour = win_colour
+    elif opponent_reaction < player_reaction:
+        pixels[opponent_px[0]:opponent_px[1]] = win_pixels
     else:
-        if player_reaction < opponent_reaction:
-            l_win = True
-            pixels[player_px[0]:player_px[1]] = win_pixels
-            l_colour = win_colour
-        elif opponent_reaction < player_reaction:
-            pixels[opponent_px[0]:opponent_px[1]] = win_pixels
-        else:
-            # Equality! Very unlikely to reach here
-            l_draw = False
-            pixels[player_px[0]:player_px[1]] = draw_pixels
-            pixels[opponent_px[0]:opponent_px[1]] = draw_pixels
-            l_colour = draw_colour
+        # Equality! Very unlikely to reach here
+        l_draw = False
+        pixels[player_px[0]:player_px[1]] = draw_pixels
+        pixels[opponent_px[0]:opponent_px[1]] = draw_pixels
+        l_colour = draw_colour
 
     return (l_win, l_misdraw, l_draw, l_colour)
 
@@ -455,7 +454,7 @@ def show_winner(player_reaction, opponent_reaction):
 def show_summary(result_colours):
     """Show the results on the NeoPixels."""
     # trim anything beyond 10
-    for idx, p_colour in enumerate(result_colours[0:numpixels]):
+    for idx, p_colour in enumerate(result_colours[:numpixels]):
         pixels[idx] = p_colour
         time.sleep(SUMMARY_DUR)
 

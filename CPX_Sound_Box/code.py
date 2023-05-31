@@ -36,7 +36,7 @@ def simpleCircle(wait):
 
 # Audio Play File
 def play_file(playname):
-    print("Playing File " + playname)
+    print(f"Playing File {playname}")
     wave_file = open(playname, "rb")
     with audiocore.WaveFile(wave_file) as wave:
         with audioio.AudioOut(board.A0) as audio:

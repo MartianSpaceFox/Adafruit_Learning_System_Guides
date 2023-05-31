@@ -5,6 +5,7 @@ Heart Rate service.
 Displays BPM value and percentage of max heart rate on CLUE
 """
 
+
 import time
 from adafruit_clue import clue
 import adafruit_ble
@@ -84,9 +85,7 @@ while True:
         print("Location:", hr_service.location)
 
         while hr_connection.connected:
-            values = hr_service.measurement_values
-            #print(values)  # returns the full heart_rate data set
-            if values:
+            if values := hr_service.measurement_values:
                 bpm = (values.heart_rate)
                 if bpm is not 0:
                     pct_target = (round(100*(bpm/max_rate)))
@@ -117,18 +116,10 @@ while True:
                     else:
                         clue.stop_tone()
 
-                    # Inputs
-                    if clue.button_a:
-                        if clue.touch_2:  # hold cap touch 2 for bigger change rate
-                            max_rate = max_rate -10
-                        else:
-                            max_rate = max_rate - 1
+                    if clue.button_a:  # hold cap touch 2 for bigger change rate
+                        max_rate = max_rate -10 if clue.touch_2 else max_rate - 1
                     if clue.button_b:
-                        if clue.touch_2:
-                            max_rate = max_rate + 10
-                        else:
-                            max_rate = max_rate + 1
-
+                        max_rate = max_rate + 10 if clue.touch_2 else max_rate + 1
                     if clue.touch_0:
                         alarm_enable = False
                     if clue.touch_1:

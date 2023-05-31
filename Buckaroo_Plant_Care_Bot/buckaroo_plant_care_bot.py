@@ -77,7 +77,7 @@ while True:
     # calculate a percentage (aval ranges from 0 to 65535)
     aperc = aval / 65535 * 100
     # display the percentage
-    soil_label.text = "Soil: {} %".format(int(aperc))
+    soil_label.text = f"Soil: {int(aperc)} %"
     print((aval, aperc))
 
     if aperc < moist_level:

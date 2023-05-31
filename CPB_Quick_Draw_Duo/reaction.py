@@ -117,16 +117,22 @@ def update_stats(stats, test_type, test_num, duration):
 
     if test_num > 1:
         # Calculate (sample) variance
-        var_s = (sum([(x - stats[test_type]["mean"])**2
-                      for x in stats[test_type]["values"]])
-                 / (test_num - 1))
+        var_s = sum(
+            (x - stats[test_type]["mean"]) ** 2
+            for x in stats[test_type]["values"]
+        ) / (test_num - 1)
     else:
         var_s = 0.0
 
     stats[test_type]["sd_sample"] = var_s ** 0.5
 
-    return ("Trial " + str(test_num), test_type, duration,
-            stats[test_type]["mean"], stats[test_type]["sd_sample"])
+    return (
+        f"Trial {str(test_num)}",
+        test_type,
+        duration,
+        stats[test_type]["mean"],
+        stats[test_type]["sd_sample"],
+    )
 
 run = 1
 statistics = {"visual":    {"values": [], "sum": 0.0, "mean": 0.0,

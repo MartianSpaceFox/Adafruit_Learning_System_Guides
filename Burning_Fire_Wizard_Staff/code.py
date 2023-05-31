@@ -88,7 +88,7 @@ def play_wav(name, loop=False):
     if wave_file:
         wave_file.close()
     try:
-        wave_file = open('sounds/' + name + '.wav', 'rb')
+        wave_file = open(f'sounds/{name}.wav', 'rb')
         wave = audiocore.WaveFile(wave_file)
         audio.play(wave, loop=loop)
     except OSError:
@@ -102,10 +102,7 @@ def power(sound, duration, reverse):
     @param duration: estimated duration of sound, in seconds (>0.0)
     @param reverse: Reverses animation. If True, begins animation at end of strip.
     """
-    if reverse:
-        prev = NUM_PIXELS
-    else:
-        prev = 0
+    prev = NUM_PIXELS if reverse else 0
     start_time = time.monotonic()  # Save audio start time
     play_wav(sound)
     while True:
@@ -184,7 +181,7 @@ while True:
         idle_brightness = IDLE_PULSE_BRIGHTNESS_MIN
         idle_increment = 0.01
         # lights the ring in COLOR_TOP color:
-        strip[0:NUM_RING] = [([int(c*idle_brightness) for c in COLOR_TOP])] * NUM_RING
+        strip[:NUM_RING] = [([int(c*idle_brightness) for c in COLOR_TOP])] * NUM_RING
         # lights the strip in COLOR_IDLE color:
         strip[NUM_RING:NUM_PIXELS] = [([int(c*idle_brightness) for c in COLOR_IDLE])] * NUM_STRIP
         strip.show()
@@ -204,7 +201,7 @@ while True:
             TRIGGER_TIME = time.monotonic()  # Save initial time of swing
             play_wav(random.choice(swing_sounds))  # Randomly choose from available swing sounds
             # make a larson scanner
-            strip_backup = strip[0:-1]
+            strip_backup = strip[:-1]
             for p in range(-1, len(strip)):
                 for i in range(p-1, p+2): # shoot a 'ray' of 3 pixels
                     if 0 <= i < len(strip):
@@ -246,7 +243,7 @@ while True:
                idle_brightness < IDLE_PULSE_BRIGHTNESS_MIN:  # Then...
                 idle_increment *= -1  # Pulse direction flip
             # light the ring:
-            strip[0:NUM_RING] = [([int(c*idle_brightness) for c in COLOR_TOP])] * NUM_RING
+            strip[:NUM_RING] = [([int(c*idle_brightness) for c in COLOR_TOP])] * NUM_RING
             # light the strip:
             strip[NUM_RING:NUM_PIXELS] = [([int(c*idle_brightness) for c in
                                             COLOR_IDLE])] * NUM_STRIP

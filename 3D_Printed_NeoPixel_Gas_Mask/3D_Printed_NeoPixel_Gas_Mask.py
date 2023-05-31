@@ -19,7 +19,7 @@ prevtime = time.monotonic()  # Time of last animation mode switch
 
 while True:  # Loop forever...
 
-    if mode == 0:  # Random sparkles - lights just one LED at a time
+    if mode == 0:
         i = random.randint(0, numpix - 1)  # Choose random pixel
         strip[i] = color  # Set it to current color
         strip.write()  # Refresh LED states
@@ -28,7 +28,7 @@ while True:  # Loop forever...
         # pixel will be refreshed on the next pass.
         strip[i] = [0, 0, 0]
         time.sleep(0.008)  # 8 millisecond delay
-    elif mode == 1:  # Spinny wheels
+    elif mode == 1:
         # A little trick here: pixels are processed in groups of 8
         # (with 2 of 8 on at a time), NeoPixel rings are 24 pixels
         # (8*3) and 16 pixels (8*2), so we can issue the same data
@@ -36,10 +36,7 @@ while True:  # Loop forever...
         # (also, the pixel order is different between the two ring
         # types, so we get the reversed motion on #2 for free).
         for i in range(numpix):  # For each LED...
-            if ((offset + i) & 7) < 2:  # 2 pixels out of 8...
-                strip[i] = color  # are set to current color
-            else:
-                strip[i] = [0, 0, 0]  # other pixels are off
+            strip[i] = color if ((offset + i) & 7) < 2 else [0, 0, 0]
         strip.write()  # Refresh LED states
         time.sleep(0.04)  # 40 millisecond delay
         offset += 1  # Shift animation by 1 pixel on next frame

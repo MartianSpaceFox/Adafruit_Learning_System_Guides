@@ -326,8 +326,8 @@ class RPSDisplay():
             self.sample.play(audio_name)
             # Audio needs to be long enough to finish movement
             while self.sample.playing():
-                if self.disp is not None:
-                    if intro_group[grp_idx].x < onscreen_x_pos:
+                if intro_group[grp_idx].x < onscreen_x_pos:
+                    if self.disp is not None:
                         intro_group[grp_idx].x += x_shift
                         time.sleep(delay_s)
 
@@ -512,9 +512,9 @@ class RPSDisplay():
             scores_group.append(op_dob)
             time.sleep(0.2)
 
-        # Sort the entries if needed
-        sort_scores = list(sco)  # Make an independent local copy
         if not descending:
+            # Sort the entries if needed
+            sort_scores = list(sco)  # Make an independent local copy
             empty_group = Group()  # minor hack to aid swaps in scores_group
             step = 3
             qm_dob = Label(self.font,
@@ -661,10 +661,9 @@ class RPSDisplay():
             self.fadeUpDown("up", duration=0.4)
             if result is not None:
                 self.sample.play(result)
-            font_scale = 2
             # Attempting to put the three pieces of "Error!" text on screen
             # synchronised with the sound sample repeating the word
-            for idx in range(error_tot):
+            for font_scale, idx in enumerate(range(error_tot), start=2):
                 error_dob = Label(self.font,
                                   text="Error!",
                                   scale=font_scale,
@@ -673,8 +672,6 @@ class RPSDisplay():
                 error_dob.y = 60 + idx * 60
                 error_group.append(error_dob)
                 time.sleep(0.5)  # Small attempt to synchronise audio with text
-                font_scale += 1
-
         else:
             # Would be slightly better to create this Group once and re-use it
             pvp_group = Group(max_size=3)
@@ -691,7 +688,7 @@ class RPSDisplay():
                 idx_lr.reverse()
 
             # Add some whitespace around winner's name
-            player_detail[1][0] = " " + player_detail[1][0] + " "
+            player_detail[1][0] = f" {player_detail[1][0]} "
 
             for (name, sprite,
                  start_x,
@@ -780,9 +777,9 @@ class RPSDisplay():
            opponent's one dark."""
 
         pix_op_idx = self.choiceToPixIdx(op_idx)
+        if result is not None:
+            self.sample.play(result)
         if void:
-            if result is not None:
-                self.sample.play(result)
             ramp_updown = (list(range(8, 128 + 1, 8))
                            + list(range(128 - 8, 0 - 1, -8)))
             # This fills all NeoPixels so will clear the RPS choice
@@ -793,9 +790,6 @@ class RPSDisplay():
                     time.sleep(0.013)  # attempt to to sync with audio
 
         else:
-            if result is not None:
-                self.sample.play(result)
-
             # Clear the RPS choice and show the player and opponent choices
             self.pix.fill(BLACK)
             if draw:

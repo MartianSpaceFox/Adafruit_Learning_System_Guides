@@ -125,9 +125,7 @@ def triangle_wave(pos, peak=0.5):
        peak brightness at a given position (0.0 to 1.0) within its span.
        Positions outside the wave's span return 0.0."""
     if 0.0 <= pos < 1.0:
-        if pos <= peak:
-            return pos / peak
-        return (1.0 - pos) / (1.0 - peak)
+        return pos / peak if pos <= peak else (1.0 - pos) / (1.0 - peak)
     return 0.0
 
 
@@ -147,9 +145,7 @@ def hue_to_rgb(hue):
         return (0.0, 1.0, ramp)
     if sixth < 4.0:
         return (0.0, 1.0 - ramp, 1.0)
-    if sixth < 5.0:
-        return (ramp, 0.0, 1.0)
-    return (1.0, 0.0, 1.0 - ramp)
+    return (ramp, 0.0, 1.0) if sixth < 5.0 else (1.0, 0.0, 1.0 - ramp)
 
 
 def random_bits():
@@ -175,23 +171,20 @@ PREV_WEIGHT = 2                      # Force initial sparkle refresh
 
 while True:
     ACTION = ENCODER_BUTTON.action()
-    if ACTION is RichButton.TAP:
-        # Encoder button tapped, cycle through play or config modes:
-        if CONFIGURING:
-            CONFIG_MODE = (CONFIG_MODE + 1) % CONFIG_MODES
-        else:
-            PLAY_MODE = (PLAY_MODE + 1) % PLAY_MODES
-    elif ACTION is RichButton.DOUBLE_TAP:
+    if ACTION is RichButton.TAP and CONFIGURING:
+        CONFIG_MODE = (CONFIG_MODE + 1) % CONFIG_MODES
+    elif ACTION is RichButton.TAP:
+        PLAY_MODE = (PLAY_MODE + 1) % PLAY_MODES
+    elif (
+        ACTION is RichButton.DOUBLE_TAP
+        or ACTION is not RichButton.HOLD
+        and ACTION is RichButton.RELEASE
+    ):
         # DOUBLE_TAP not currently used, but this is where it would go.
         pass
     elif ACTION is RichButton.HOLD:
         # Encoder button held, toggle between PLAY and CONFIG modes:
         CONFIGURING = not CONFIGURING
-    elif ACTION is RichButton.RELEASE:
-        # RELEASE not currently used (play/config state changes when HOLD
-        # is detected), but this is where it would go.
-        pass
-
     # Process encoder input. Code always uses the ENCODER_CHANGE value
     # for relative adjustments.
     ENCODER_POSITION = ENCODER.position
@@ -253,10 +246,7 @@ while True:
                         frac = 1.0 + frac
                     set_pixel(i, triangle_wave(frac, 0.5 - SPEED * 0.125))
             elif PLAY_MODE is PLAY_MODE_SCAN:
-                if POS >= 0:
-                    S = 2.0 - modf(POS)[0] * 4.0
-                else:
-                    S = 2.0 - (1.0 + modf(POS)[0]) * 4.0
+                S = 2.0 - modf(POS)[0] * 4.0 if POS >= 0 else 2.0 - (1.0 + modf(POS)[0]) * 4.0
                 for i in range(16):
                     Y = sin((i / 7.5 + 0.5) * pi)  # Pixel Y coord
                     D = 0.5 - abs(Y - S) * 0.6     # Distance to scanline

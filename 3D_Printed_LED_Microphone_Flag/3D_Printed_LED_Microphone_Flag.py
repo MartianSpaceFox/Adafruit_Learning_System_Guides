@@ -86,11 +86,8 @@ def fscale(originalmin, originalmax, newbegin, newend, inputvalue, curve):
 
     # condition curve parameter
     # limit range
-    if curve > 10:
-        curve = 10
-    if curve < -10:
-        curve = -10
-
+    curve = min(curve, 10)
+    curve = max(curve, -10)
     # - invert and scale -
     # this seems more intuitive
     # postive numbers give more weight to high end on output
@@ -99,12 +96,8 @@ def fscale(originalmin, originalmax, newbegin, newend, inputvalue, curve):
     curve = pow(10, curve)
 
     # Check for out of range inputValues
-    if inputvalue < originalmin:
-        inputvalue = originalmin
-
-    if inputvalue > originalmax:
-        inputvalue = originalmax
-
+    inputvalue = max(inputvalue, originalmin)
+    inputvalue = min(inputvalue, originalmax)
     # Zero Refference the values
     originalrange = originalmax - originalmin
 
@@ -124,20 +117,16 @@ def fscale(originalmin, originalmax, newbegin, newend, inputvalue, curve):
     if originalmin > originalmax:
         return 0
 
-    if invflag == 0:
-        rangedvalue = (pow(normalizedcurval, curve) * newrange) + newbegin
-    else:  # invert the ranges
-        rangedvalue = newbegin - (pow(normalizedcurval, curve) * newrange)
-
-    return rangedvalue
+    return (
+        (pow(normalizedcurval, curve) * newrange) + newbegin
+        if invflag == 0
+        else newbegin - (pow(normalizedcurval, curve) * newrange)
+    )
 
 
 def drawLine(fromhere, to):
     if fromhere > to:
-        fromheretemp = fromhere
-        fromhere = to
-        to = fromheretemp
-
+        fromhere, to = to, fromhere
     for index in range(fromhere, to):
         strip[index] = (0, 0, 0)
 

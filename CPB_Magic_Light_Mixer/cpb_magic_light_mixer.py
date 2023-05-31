@@ -12,11 +12,14 @@ from adafruit_circuitplayground import cp
 
 
 def find_connection():
-    for connection in radio.connections:
-        if MagicLightService not in connection:  # Filter services
-            continue
-        return connection, connection[MagicLightService]
-    return None, None
+    return next(
+        (
+            (connection, connection[MagicLightService])
+            for connection in radio.connections
+            if MagicLightService in connection
+        ),
+        (None, None),
+    )
 
 radio = adafruit_ble.BLERadio()
 

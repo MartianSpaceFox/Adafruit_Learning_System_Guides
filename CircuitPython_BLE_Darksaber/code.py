@@ -96,7 +96,7 @@ def play_wav(name, loop=False):
     if wave_file:
         wave_file.close()
     try:
-        wave_file = open('sounds/' + name + '.wav', 'rb')
+        wave_file = open(f'sounds/{name}.wav', 'rb')
         wave = WaveFile(wave_file)
         audio.play(wave, loop=loop)
     except OSError:

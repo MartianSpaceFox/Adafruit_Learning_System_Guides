@@ -285,11 +285,7 @@ while True:  # Loop forever...
                 # switch on / off the appropriate pixels according to
                 # the current offset
                 for idx in range(0, numpix):
-                    if ((offset + idx) & 7) < 2:
-                        strip[idx] = color
-                    else:
-                        strip[idx] = (0, 0, 0)
-
+                    strip[idx] = color if ((offset + idx) & 7) < 2 else (0, 0, 0)
                 # advance the offset and thus, spin the wheel
                 if curr_action == ACT_WHEEL_CLKW:
                     offset += 1

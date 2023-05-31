@@ -18,19 +18,17 @@ def text_transform(val):
         return "$%d" % val
     if CURRENCY == "EUR":
         return "‎€%d" % val
-    if CURRENCY == "GBP":
-        return "£%d" % val
-    return "%d" % val
+    return "£%d" % val if CURRENCY == "GBP" else "%d" % val
 
 
 # the current working directory (where this file is)
-cwd = ("/" + __file__).rsplit("/", 1)[0]
+cwd = f"/{__file__}".rsplit("/", 1)[0]
 
 matrixportal = MatrixPortal(
     url=DATA_SOURCE,
     json_path=DATA_LOCATION,
     status_neopixel=board.NEOPIXEL,
-    default_bg=cwd + "/bitcoin_background.bmp",
+    default_bg=f"{cwd}/bitcoin_background.bmp",
     debug=False,
 )
 

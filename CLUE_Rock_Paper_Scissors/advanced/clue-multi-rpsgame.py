@@ -65,8 +65,8 @@ try:
     ble_name = secrets.get("rps_name")
     if ble_name is None:
         ble_name = secrets.get("ble_name")
-        if ble_name is None:
-            print("INFO: No rps_name or ble_name entry found in secrets dict")
+    if ble_name is None:
+        print("INFO: No rps_name or ble_name entry found in secrets dict")
 except ImportError:
     pass   # File is optional, reaching here is not a program error
 
@@ -208,11 +208,17 @@ MAX_PLAYERS = 8
 # Some code is dependent on these being lower-case
 CHOICES = ("rock", "paper", "scissors")
 
-rps_display = RPSDisplay(display, pixels,
-                         CHOICES, sample, WAV_VICTORY_NAME,
-                         MAX_PLAYERS, BUTTON_Y_POS,
-                         IMAGE_DIR + "/rps-sprites-ind4.bmp",
-                         ble_color=JG_RX_COL)
+rps_display = RPSDisplay(
+    display,
+    pixels,
+    CHOICES,
+    sample,
+    WAV_VICTORY_NAME,
+    MAX_PLAYERS,
+    BUTTON_Y_POS,
+    f"{IMAGE_DIR}/rps-sprites-ind4.bmp",
+    ble_color=JG_RX_COL,
+)
 
 # Transmit maximum times in seconds
 JG_MSG_TIME_S = 20
@@ -513,7 +519,7 @@ while True:
         # Chalk up wins and losses - checks this player but also has to
         # check other players against each other to calculate all the
         # scores for the high score table at the end of game
-        for p_idx0, (p0_name, _) in enumerate(players[:len(players) - 1]):
+        for p_idx0, (p0_name, _) in enumerate(players[:-1]):
             for p_idx1, (p1_name, _) in enumerate(players[p_idx0 + 1:], p_idx0 + 1):
                 # evaluateRound takes text strings for RPS
                 result = evaluateRound(player_choices[p_idx0],

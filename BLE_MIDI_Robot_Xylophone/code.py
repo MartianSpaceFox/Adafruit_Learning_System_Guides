@@ -23,19 +23,11 @@ i2c = busio.I2C(board.SCL, board.SDA)
 mcp1 = MCP23017(i2c, address=0x20)
 mcp2 = MCP23017(i2c, address=0x21)
 
-#  1st solenoid array, corresponds with 1st mux
-noids0 = []
-
-for pin in range(16):
-    noids0.append(mcp1.get_pin(pin))
+noids0 = [mcp1.get_pin(pin) for pin in range(16)]
 for n in noids0:
     n.direction = Direction.OUTPUT
 
-#  2nd solenoid array, corresponds with 2nd mux
-noids1 = []
-
-for pin in range(16):
-    noids1.append(mcp2.get_pin(pin))
+noids1 = [mcp2.get_pin(pin) for pin in range(16)]
 for n in noids1:
     n.direction = Direction.OUTPUT
 

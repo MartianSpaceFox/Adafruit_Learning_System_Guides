@@ -104,8 +104,7 @@ while True:
                 elif packet.button == ButtonPacket.BUTTON_4:
                     color = PURPLE
                     crickit.neopixel.fill(color)
-            # do this when some buttons are released
-            elif isinstance(packet, ButtonPacket) and not packet.pressed:
+            elif isinstance(packet, ButtonPacket):
                 if packet.button == ButtonPacket.RIGHT:
                     print("released right")
                     color = prior_color

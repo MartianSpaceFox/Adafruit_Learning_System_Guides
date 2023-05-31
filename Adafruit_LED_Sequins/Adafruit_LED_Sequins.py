@@ -26,13 +26,9 @@ while True:
     print(brightness)
 
     # reverse the direction of the fading at the ends of the fade:
-    if brightness <= 0:
+    if brightness <= 0 or brightness >= 65535:
         fade_amount = -fade_amount
         counter += 1
-    elif brightness >= 65535:
-        fade_amount = -fade_amount
-        counter += 1
-
     # wait for 15 ms to see the dimming effect
     time.sleep(.015)
 
@@ -40,7 +36,4 @@ while True:
     # checking the modulo of the counter.
     # the modulo function gives you the remainder of
     # the division of two numbers:
-    if counter % 4 == 0:
-        digital_leds.value = True
-    else:
-        digital_leds.value = False
+    digital_leds.value = counter % 4 == 0

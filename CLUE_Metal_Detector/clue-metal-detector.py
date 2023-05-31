@@ -72,7 +72,6 @@ if clue_less:
     # Outputs
     display = tft_gizmo.TFT_Gizmo()
     audio_out = AudioOut(board.SPEAKER)
-    min_audio_frequency = 100
     max_audio_frequency = 4000
     pixels = cp.pixels
     board_pin_output = board.A1
@@ -93,7 +92,6 @@ else:
     # Outputs
     display = board.DISPLAY
     audio_out = AudioOut(board.SPEAKER)
-    min_audio_frequency = 100
     max_audio_frequency = 5000
     pixels = clue.pixel
     board_pin_output = board.P0
@@ -105,6 +103,7 @@ else:
     button_right = lambda: clue.button_b
 
 
+min_audio_frequency = 100
 # Globals variables used r/w in functions
 last_frequency = 0
 last_negbar_len = None
@@ -216,11 +215,11 @@ def show_text(text):
     global screen_group, text_overlay_gob
 
     if text:
-        font_scale = 3
         line_spacing = 1.25
 
         text_lines = text.split("\n")
-        max_word_chars = max([len(word) for word in text_lines])
+        max_word_chars = max(len(word) for word in text_lines)
+        font_scale = 3
         # If too large reduce the scale to 2 and hope!
         if (max_word_chars * font_scale * FONT_WIDTH > screen_width
                 or (len(text_lines) * font_scale
@@ -237,10 +236,9 @@ def show_text(text):
                               - font_scale * FONT_WIDTH * max_word_chars) // 2
         text_overlay_gob.y = screen_height // 2
         screen_group.append(text_overlay_gob)
-    else:
-        if text_overlay_gob is not None:
-            screen_group.remove(text_overlay_gob)
-            text_overlay_gob = None
+    elif text_overlay_gob is not None:
+        screen_group.remove(text_overlay_gob)
+        text_overlay_gob = None
 
 
 def voltage_bar_set(volt_diff):
@@ -334,9 +332,8 @@ def neopixel_set(pix, d_volt, mag_ut):
                 np_r = min(round(-d_volt * 8e3), 255)
             else:
                 np_g = min(round(d_volt * 8e3), 255)
-        else:
-            if mag_ut > threshold_mag:
-                np_b = min(round(mag_ut * 6), 255)
+        elif mag_ut > threshold_mag:
+            np_b = min(round(mag_ut * 6), 255)
 
     pix.fill((np_r, np_g, np_b))  # Note: double brackets to pass tuple
     neopixel_alternate = not neopixel_alternate

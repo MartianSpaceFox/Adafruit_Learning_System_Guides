@@ -4,6 +4,7 @@ This example broadcasts our Mac Address as our Eddystone ID and a link to a URL 
 Hold the A button to display QR code, use B button to pick URL from the list.
 """
 
+
 import time
 from adafruit_pybadger import pybadger
 import adafruit_ble
@@ -43,7 +44,7 @@ while True:
                                     email_string_one="", email_string_two=ad_url[pick][0])
         time.sleep(0.1)
 
-    elif pybadger.button.a and pybadger.button.b:
+    elif pybadger.button.a:
         pybadger.play_tone(1000, 0.2)
         pybadger.brightness = 1
         pybadger.show_business_card(image_name="cluebeacon.bmp")
